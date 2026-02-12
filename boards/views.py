@@ -14,7 +14,7 @@ from rest_framework import viewsets
 
 class BoardsListCreateAPIView(ListCreateAPIView):
     serializer_class = BoardsSerializer
-
+    permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         return Boards.objects.filter(owner = self.request.user)
     
