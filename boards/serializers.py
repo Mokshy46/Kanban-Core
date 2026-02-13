@@ -1,4 +1,4 @@
-from .models import Boards,Cards,Lists
+from .models import Boards,Cards,Lists,BoardMember
 from rest_framework import serializers
 
 
@@ -25,4 +25,8 @@ class CardsSerializer(serializers.ModelSerializer):
         fields = "__all__"
     
 
-    
+class BoardMemberSerializer(serializers.Serializer):
+
+    class Meta:
+        model = BoardMember
+        fields = "__all__"

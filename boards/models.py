@@ -15,6 +15,24 @@ class Boards(models.Model):
     class Meta:
         verbose_name = 'Board'
         
+class BoardMember(models.Model):
+
+    ROLE_CHOICES = [
+        ("owner", "Owner"),
+        ("member", "Member"),
+        ("admin", "Admin")
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    board = models.ForeignKey(Boards, on_delete=models.CASCADE)
+    role = models.CharField(max_length=22, choices=ROLE_CHOICES)
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} as {self.role}"
+    
+    class Meta:
+        verbose_name = 'Board Member'
     
 
 class Lists(models.Model):
