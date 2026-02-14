@@ -17,10 +17,15 @@ class Boards(models.Model):
         
 class BoardMember(models.Model):
 
+    ROLE_OWNER = "owner"
+    ROLE_ADMIN = "admin"
+    ROLE_MEMBER = "member"
+
+
     ROLE_CHOICES = [
-        ("owner", "Owner"),
-        ("member", "Member"),
-        ("admin", "Admin")
+        (ROLE_OWNER, "Owner"),
+        (ROLE_MEMBER, "Member"),
+        (ROLE_ADMIN, "Admin"),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

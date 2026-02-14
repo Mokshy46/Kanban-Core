@@ -1,47 +1,44 @@
 from rest_framework import permissions
-from .models import Boards,Lists,Cards
+from .models import Boards,Lists,Cards,BoardMember
 
 
-class IsBoardOwner(permissions.BasePermission):
+class BoardRolePermission(permissions.BasePermission):
 
-    def has_object_permission(self, request, view, obj):
-        
-        if request.method == "OPTIONS":
-            return True
-        
-        return obj.owner == request.user 
     
+    def get_board(self, obj):
 
-class IsListInBoard(permissions.BasePermission):
+        if hasattr(obj,'board'):
+            return obj.board
+        
+        elif hasattr(obj,'list'):
+            return obj.list.board
+        
+        else:
+            return obj
+        
 
     def has_object_permission(self, request, view, obj):
 
-        if request.method == "OPTIONS":
-            return True
-        
-        return obj.board.owner == request.user
-    
+        board = self.get_board(obj)
 
+        if not board:
+            return False
 
- 
+        try:
 
-class IsCardInList(permissions.BasePermission):
+            membership = BoardMember.objects.get(
+                user = request.user,
+                board = board,
+            )
 
-    def has_object_permission(self, request, view, obj):
+        except BoardMember.DoesNotExist:
+            return False
 
-        if request.method == "OPTIONS":
-            return True
-        
-
-        return obj.list.board.owner == request.user
-    
-
-class IsBoardMember(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        
         if request.method in permissions.SAFE_METHODS:
             return True
         
-
-        return 
+        if membership.role in [BoardMember.ROLE_ADMIN,
+                          BoardMember.ROLE_OWNER]:
+            return True
+        
+        

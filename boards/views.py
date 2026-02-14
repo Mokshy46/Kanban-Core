@@ -1,99 +1,63 @@
 from django.shortcuts import render
 from .serializers import BoardsSerializer,ListsSerializer,CardsSerializer
-from rest_framework.views import APIView
-from .models import Boards, Cards,Lists
+from .models import Boards, Cards,Lists, BoardMember
 from rest_framework import permissions,authentication
-from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework import viewsets
-from .permissions import IsBoardOwner,IsListInBoard,IsCardInList
+from .permissions import BoardRolePermission
 
 
-class BoardsListCreateAPIView(ListCreateAPIView):
+class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
-    permission_classes = [permissions.IsAuthenticated, IsBoardOwner]
-    
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_queryset(self):
-        return Boards.objects.filter(owner = self.request.user)
-    
+        return Boards.objects.filter(
+            boardmember__user = self.request.user
+        )
+
+
+class BoardsCreateAPIView(generics.CreateAPIView):
+    serializer_class = BoardsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
     def perform_create(self, serializer):
-        serializer.save(owner = self.request.user)
+        board = serializer.save(owner = self.request.user)
+
+        BoardMember.objects.create(
+            board = board,
+            user = self.request.user,
+            role = BoardMember.ROLE_OWNER
+        )
 
 
 class BoardsRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = BoardsSerializer
-    permission_classes = [IsBoardOwner, permissions.IsAuthenticated]
-    
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+
     def get_queryset(self):
-        return Boards.objects.filter(owner = self.request.user)
-
-# class ListsListCreateAPIView(ListCreateAPIView):
-#     queryset = Lists.objects.all()
-#     serializer_class = ListsSerializer
-
+        return Boards.objects.filter(
+            boardmember__user = self.request.user
+        )
+    
 
 class ListsViewSet(viewsets.ModelViewSet):
     queryset = Lists.objects.all()
     serializer_class = ListsSerializer
-    permission_classes = [IsListInBoard, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
 
     def get_queryset(self):
-        return Lists.objects.filter(board__owner = self.request.user)
+        return Lists.objects.filter(board__boardmember__user = self.request.user)
     
 
 
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = Cards.objects.all()
     serializer_class = CardsSerializer
-    permission_classes = [IsCardInList]
+    permission_classes = [ permissions.IsAuthenticated, BoardRolePermission]
 
     def get_queryset(self):
-        return Cards.objects.filter(list__board__owner=self.request.user)
-
-
-
-
-
-
-
-
-
-
-
-
-# class BoardsViewSet(ModelViewSet):
-#     serializer_class = BoardsSerializer
-#     permission_classes = [permissions.AllowAny]
-
-#     def get_queryset(self):
-#         return Boards.objects.filter(owner=self.request.user)
-
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-
-
-# class BoardsView(APIView):
-#     permission_classes = [permissions.AllowAny]
-
-#     def get(self,request): 
-#         board = Boards.objects.all()
-#         serializer = BoardsSerializer(board, many = True)
-#         return Response(data=serializer.data)
-    
-    
-    
-    
-    
-# class ListsListView(generics.ListAPIView):
-#     model = Lists
-#     permission_classes = [permissions.AllowAny]
-#     serializer_class = ListsSerializer
-    
-#     def get_queryset(self):
-#         lists = Lists.objects.all()
-#         return lists
-    
+        return Cards.objects.filter(list__board__boardmember__user=self.request.user)
 
 
