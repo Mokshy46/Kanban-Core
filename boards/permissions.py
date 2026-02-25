@@ -37,8 +37,29 @@ class BoardRolePermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         
-        if membership.role in [BoardMember.ROLE_ADMIN,
-                          BoardMember.ROLE_OWNER]:
-            return True
+        if isinstance(obj,Boards):
+
+            if request.method == "DELETE":
+                if membership.role in [BoardMember.ROLE_OWNER]:
+                    return True
+            
+                else:
+                    return False
+                
+            if request.method == "PUT" or request.method == "PATCH":
+                if membership.role in [BoardMember.ROLE_ADMIN, BoardMember.ROLE_OWNER]:
+                    return True
+                
+                else:
+                    return False
+
+        else:
+
+            if membership.role in [BoardMember.ROLE_ADMIN, BoardMember.ROLE_OWNER]:
+                return True
+
+
+
+    def has_permission(self, request, view):
         
-        
+        return 
