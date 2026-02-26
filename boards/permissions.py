@@ -59,7 +59,3 @@ class BoardRolePermission(permissions.BasePermission):
                 return True
 
 
-
-    def has_permission(self, request, view):
-        
-        return 

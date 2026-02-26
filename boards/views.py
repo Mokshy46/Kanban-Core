@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import BoardsSerializer,ListsSerializer,CardsSerializer
+from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer
 from .models import Boards, Cards,Lists, BoardMember
 from rest_framework import permissions,authentication
 from rest_framework import generics
@@ -15,7 +15,7 @@ class BoardsListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return Boards.objects.filter(
             boardmember__user = self.request.user
-        )
+        ).distinct()
 
 
 class BoardsCreateAPIView(generics.CreateAPIView):
@@ -33,7 +33,7 @@ class BoardsCreateAPIView(generics.CreateAPIView):
 
 
 class BoardsRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = BoardsSerializer
+    serializer_class = BoardDetailsSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
 
     def get_queryset(self):
@@ -44,7 +44,7 @@ class BoardsRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 class ListsViewSet(viewsets.ModelViewSet):
     queryset = Lists.objects.all()
-    serializer_class = ListsSerializer
+    serializer_class = ListDetailsSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
 
     def get_queryset(self):
