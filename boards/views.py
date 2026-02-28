@@ -11,7 +11,6 @@ from .permissions import BoardRolePermission
 class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
     permission_classes = [permissions.IsAuthenticated]
-
     def get_queryset(self):
         return Boards.objects.filter(
             boardmember__user = self.request.user
