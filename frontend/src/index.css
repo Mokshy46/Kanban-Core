@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+
+
+@layer components {
+    .heading {
+        font-family: "Comfortaa", sans-serif;
+        font-weight: 700;
+
+    }
+}
