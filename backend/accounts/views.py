@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from .serializers import RegistrationSerializer, MyTokenObtainSerializer
+from .serializers import RegistrationSerializer,LoginSerializer
 from rest_framework import generics,status
 from rest_framework import authentication,permissions
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class RegistrationApiView(generics.GenericAPIView):
@@ -44,5 +44,30 @@ class RegistrationApiView(generics.GenericAPIView):
 
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainSerializer
+
+
+class LoginApiView(generics.GenericAPIView):
+    
+    serializer_class = LoginSerializer
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        user = authenticate(username=email, password=password)
+
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+            }, status=status.HTTP_200_OK)
+
+        return Response(
+            {"detail": "Invalid credentials"},
+            status=status.HTTP_401_UNAUTHORIZED
+        )

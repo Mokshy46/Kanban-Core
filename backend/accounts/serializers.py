@@ -1,9 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 from .models import CustomUser
 from rest_framework import serializers
-from django.contrib.auth import get_user_model,authenticate
+from django.contrib.auth import get_user_model
 from rest_framework.response import Response
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
 
@@ -45,36 +44,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
         
 
 
-# class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.ModelSerializer):
     
-#     email = serializers.EmailField()
+    email = serializers.EmailField()
     
-#     class Meta:
-#         model = User
-#         fields = ['email','password']
-
-
-class MyTokenObtainSerializer(TokenObtainPairSerializer):
-    
-    user_name_field = "email"
-    
-    def validate(self, attrs):
-        credentials = {
-            'email': attrs.get('email'),
-            'password': attrs.get('password'),
-        }
-        
-        user = authenticate(**credentials)
-        
-        
-        if user is None:
-            
-            raise serializers.ValidationError("Invalid credentials")
-        
-        refresh = self.get_token(user)
-        
-        return {
-            'refresh': str(refresh),
-            'access':str(refresh.access_token),
-        }
+    class Meta:
+        model = User
+        fields = ['email','password']
         

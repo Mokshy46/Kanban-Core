@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -49,7 +50,7 @@ const Register = () => {
 
             // optional: auto redirect to login
             setTimeout(() => {
-                window.location.href = "/login";
+                window.location.href = "/";
             }, 1500);
 
         } catch (error) {
