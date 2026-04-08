@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import Cards from "./components/Boards";
 import CreateBoard from "./components/CreateBoard";
 import CreateCards from "./components/CreateCards";
+import BoardDetail from "./components/BoardDetail";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/boards" element={<Cards />} />
       <Route path="/create" element={<CreateBoard />} />
       <Route path="/createcards" element={<CreateCards />} />
+      <Route path="/boards/:id" element={<BoardDetail />} />
 
     </Routes>
   );
