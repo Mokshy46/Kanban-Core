@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer
 from .models import Boards, Cards,Lists, BoardMember
 from rest_framework import permissions,authentication
@@ -48,64 +47,52 @@ class ListsViewSet(viewsets.ModelViewSet):
     queryset = Lists.objects.all()
     serializer_class = ListDetailsSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['board'] 
+
     def get_queryset(self):
+        board_id = self.kwargs.get('board_id')
+        
+        if board_id:
+            return Lists.objects.filter(
+                board_id=board_id,
+                board__boardmember__user = self.request.user
+                
+            )
         return Lists.objects.filter(board__boardmember__user = self.request.user)
     
+    def perform_create(self, serializer):
+        board_id = self.kwargs.get('board_id')
+        
+        if board_id:
+            serializer.save(board_id=board_id)        
+            
+        else:
+            serializer.save()
 
 
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = Cards.objects.all()
     serializer_class = CardsSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['list'] 
     permission_classes = [ permissions.IsAuthenticated, BoardRolePermission]
 
     def get_queryset(self):
-        return Cards.objects.filter(list__board__boardmember__user=self.request.user)
+        list_id = self.kwargs.get('list_id')
+        
+        if list_id:
+            return Cards.objects.filter(
+                list_id = list_id,
+                list__board__boardmember__user=self.request.user
+            )
+
+        return Cards.objects.filter(
+            list__board__boardmember__user=self.request.user
+        )
 
     def perform_create(self, serializer):
-        list_id = self.request.data.get('list')
-        serializer.save(list_id=list_id)
+        list_id = self.kwargs.get('list_id')
+    
+        if list_id:
+            serializer.save(list_id=list_id)
+        else:
+            serializer.save()
         
-        
-        
-@api_view(['POST'])
-def add_lists_to_boards(request, pk):
-    
-    try:
-        board = Boards.objects.get(pk=pk)
-        
-    except Boards.DoesNotExist:
-        return Response({'error':'Board not found!!'})
-    
-    serializer = ListDetailsSerializer(data = request.data)
-    
-    if serializer.is_valid():
-        serializer.save(board = board)
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
-
-
-
-
-
-
-# @api_view(['POST'])
-# def add_cards_to_lists(request, pk):
-    
-#     try:
-#         list = Lists.objects.get(pk=pk)
-        
-#     except Lists.DoesNotExist:
-#         return Response({'error':'Board not found!!'})
-    
-#     serializer =CardsSerializer(data = request.data)
-    
-#     if serializer.is_valid():
-#         serializer.save(list = list)
-#         return Response(serializer.data)
-#     return Response(serializer.errors, status=400)
-
 

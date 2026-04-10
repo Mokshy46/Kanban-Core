@@ -24,13 +24,26 @@ urlpatterns = [
         }),
         name='card-detail'
     ),
-]
-
-urlpatterns = [
-    path('boards/', BoardsListAPIView.as_view(), name= 'boards'),
-    path('boards/<int:pk>/lists', views.add_lists_to_boards, name = 'board_lists' ),
-    path('create_board/', BoardsCreateAPIView.as_view(), name='create_board' ),
     
+    path(
+        'boards/<int:board_id>/lists/',
+        ListsViewSet.as_view({'get':'list','post':'create'}),
+        name='board-lists'
+         ),
+    
+    path(
+        'lists/<int:pk>/',
+        ListsViewSet.as_view({
+            'get':'retrieve',
+            'put':'update',
+            'patch':'partial_update',
+            'delete':'destroy'
+        }),
+        name='list-detail'
+    ),    
+    
+    path('boards/', BoardsListAPIView.as_view(), name= 'boards'),
+    path('create_board/', BoardsCreateAPIView.as_view(), name='create_board' ),
     path('boards/<int:pk>/',BoardsRetrieveUpdateDestroyAPIView.as_view(), name='board_destroy'),
     
     path('', include(router.urls)),
