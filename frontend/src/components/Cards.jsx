@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api';
 const Cards = () => {
+    const { id } = useParams();
 
     const [cards, setCards] = useState([]);
 
@@ -8,7 +9,7 @@ const Cards = () => {
 
         const fetchCards = async () => {
             try {
-                const response = await api.get("/api/cards/")
+                const response = await api.get(`/api/lists/${id}/cards/`)
                 setCards(response.data);
 
             }
@@ -28,7 +29,7 @@ const Cards = () => {
                 {cards.map((card) => (
                     <div key={card.id} className="p-4 border rounded shadow">
                         <h2 className="font-semibold">{card.title}</h2>
-                       
+
                         <p>{card.description}</p>
                         <p>{card.created_at}</p>
                     </div>

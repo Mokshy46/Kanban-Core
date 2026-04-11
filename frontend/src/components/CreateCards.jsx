@@ -1,137 +1,73 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import api from "../api";
 
-const CreateCards = () => {
+const CreateCards = ({ listId, setCards }) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+  });
 
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        list: "",
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
+  };
 
-    const [success, setSuccess] = useState("");
-    const [error, setError] = useState("");
+  const handleSubmit = async () => {
+    if (!formData.title.trim()) return;
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+    try {
+      const response = await api.post(
+        `/api/lists/${listId}/cards/`,
+        formData
+      );
 
+      setCards((prev) => [...prev, response.data]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-
-        setError("");
-
-        try {
-            const response = await api.post("/api/cards/", formData);
-
-            console.log("Card Created Successfully", response.data);
-            setSuccess("Card Created Successfully");
-            setFormData({
-                title: "",
-                description: "",
-                list: "",
-            });
-            navigate("/boards")
-        }
-
-        catch (error) {
-            console.log("Error during card creation:", error.response?.data);
-
-            if (error.response?.data) {
-                const data = error.response.data;
-
-                if (data.detail) {
-                    setError(data.detail)
-                }
-                else {
-                    const firstKey = Object.keys(data)[0];
-                    setError(data[firstKey]?.[0] || "card creation failed");
-
-                }
-            }
-
-            else {
-                setError("server error");
-            }
-        };
+      setFormData({ title: "", description: "" });
+      setIsAdding(false);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    return (
+  return isAdding ? (
+    <div className="bg-gray-800 p-3 rounded w-64">
+      <input
+        name="title"
+        className="w-full p-2 mb-2"
+        placeholder="Enter card title..."
+        value={formData.title}
+        onChange={handleChange}
+        autoFocus
+      />
 
-        <div className="flex flex-col  min-h-screen items-center justify-center  heading">
-            {success && (
-                <p className=" text-2xl text-green-600">{success} </p>
-            )}
+      <textarea
+        name="description"
+        className="w-full p-2 mb-2"
+        placeholder="Enter description..."
+        value={formData.description}
+        onChange={handleChange}
+      />
 
-            <div className="border rounded-2xl shadow-2xl shadow-gray-400 items-center ">
+      <button onClick={handleSubmit} className="bg-blue-500 px-3 py-1 mr-2">
+        Add Card
+      </button>
 
-
-                <div className=" text-center m-5">
-                    <form onSubmit={handleSubmit}>
-                        <div className="p-3">
-                            <label>Card Title: </label>
-                            <input
-                                onChange={handleChange}
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                placeholder="Enter card title"
-                                className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600"
-                            />
-                        </div>
-
-
-
-                        <div className="p-3">
-                            <label>List: </label>
-                            <input
-                                onChange={handleChange}
-                                type="number"
-                                name="list"
-                                value={formData.list}
-                                placeholder="List"
-                                className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600 h-15"
-                            />
-                        </div>
-
-                        <div className="p-3">
-                            <label>Description: </label>
-                            <input
-                                onChange={handleChange}
-                                type="text"
-                                name="description"
-                                value={formData.description}
-                                placeholder="Description"
-                                className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600 h-15"
-                            />
-                        </div>
-
-
-
-
-
-
-
-                        <button type="submit" className=" bg-black text-white p-3 rounded-2xl w-full h-10 active:scale-95 transition transform duration-150">Create</button>
-
-                    </form>
-
-                    <Link to="/boards"> <button className=" bg-black text-white p-3 rounded-2xl mt-3 h-10 active:scale-95 transition transform duration-150">Go Back</button></Link>
-                </div>
-            </div>
-        </div>
-
-
-    )
-}
-
+      <button onClick={() => setIsAdding(false)}>Cancel</button>
+    </div>
+  ) : (
+    <button
+      onClick={() => setIsAdding(true)}
+      className="bg-gray-700 p-3 rounded w-64 text-left"
+    >
+      + Add another card
+    </button>
+  );
+};
 export default CreateCards

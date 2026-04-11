@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import { useParams } from "react-router-dom";
+import CreateCards from "./CreateCards";
 
 const List = ({ list }) => {
+ 
+
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const res = await api.get(`/api/cards/?list=${list.id}`);
+        const res = await api.get(`/api/lists/${list.id}/cards/`);
         setCards(res.data);
       } catch (err) {
         console.log(err);
@@ -29,6 +33,8 @@ const List = ({ list }) => {
           {card.title}
         </div>
       ))}
+
+        <CreateCards listId={list.id} setCards={setCards} />
     </div>
   );
 };
