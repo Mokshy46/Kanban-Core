@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "../api";
 import List from "./List";
 import CreateLists from "./CreateLists";
+import UandDList from "./UandDList";
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -10,34 +11,39 @@ const BoardDetail = () => {
   const [lists, setLists] = useState([]);
   const [board, setBoards] = useState(null);
 
+
+
+  const fetchLists = async () => {
+    try {
+      const res = await api.get(`/api/boards/${id}/lists/`);
+      setLists(res.data);
+
+
+      const boardResponse = await api.get(`/api/boards/${id}/`);
+      setBoards(boardResponse.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchLists = async () => {
-      try {
-        const res = await api.get(`/api/boards/${id}/lists/`);
-        setLists(res.data);
-
-
-        const boardResponse = await api.get(`/api/boards/${id}/`);
-        setBoards(boardResponse.data);
-
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchLists();
   }, [id]);
 
   return (
     <div className="p-5">
-      
-        <h1 className="text-2xl font-bold mb-5">
-          {board ? board.title : "Loading..."}
-        </h1>
+
+      <h1 className="text-2xl font-bold mb-5">
+        {board ? board.title : "Loading..."}
+      </h1>
 
       <div className="flex gap-4 overflow-x-auto">
         {lists.map((list) => (
-          <List key={list.id} list={list} />
+          <div key={list.id}>
+            <List list={list} />
+            <UandDList list={list} refreshList={fetchLists} />
+          </div>
         ))}
 
         <CreateLists boardId={id} setLists={setLists} />

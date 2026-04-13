@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import api from "../api"; // your axios instance
-import Cards from "./Cards";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import UandDBoard from "./UandDBoard";
 
 const Boards = () => {
   const [boards, setBoards] = useState([]);
 
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const res = await api.get("/api/boards/");
-        setBoards(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
+  const fetchBoards = async () => {
+    try {
+      const res = await api.get("/api/boards/");
+      setBoards(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
     fetchBoards();
   }, []);
 
@@ -32,17 +31,20 @@ const Boards = () => {
 
 
         {boards.map((board) => (
+          
           <div key={board.id}
-            onClick={() => navigate(`/boards/${board.id}`)}
-           className="m-4 rounded-2xl shadow-2xl shadow-gray-400 p-6 text-center">
+            className="m-4 rounded-2xl shadow-2xl shadow-gray-400 p-6 text-center">
             <h2>{board.title}</h2>
             <p>Owner: {board.owner}</p>
             <p>{board.created_at}</p>
+            <UandDBoard  board={board} refreshBoard={fetchBoards} />
+
+            <button className="font-extrabold" onClick={() => navigate(`/boards/${board.id}`)}> view</button>
           </div>
         ))}
 
       </div>
-     
+
     </div>
 
 
