@@ -1,18 +1,6 @@
 from .models import Boards,Cards,Lists,BoardMember
 from rest_framework import serializers
 
-
-
-
-
-# class ListsSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Lists
-#         fields = "__all__"
-
-
-
 class CardsSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -42,8 +30,6 @@ class ListDetailsSerializer(serializers.ModelSerializer):
         }        
 
 
-
-
 class BoardsSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.first_name')
     lists = ListDetailsSerializer(many = True, read_only = True )
@@ -55,8 +41,6 @@ class BoardsSerializer(serializers.ModelSerializer):
 class BoardDetailsSerializer(serializers.ModelSerializer):
 
     lists = ListDetailsSerializer(many = True, read_only = True)
-
-
     owner = serializers.ReadOnlyField(source='owner.first_name')
 
     class Meta:

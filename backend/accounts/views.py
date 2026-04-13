@@ -19,32 +19,6 @@ class RegistrationApiView(generics.GenericAPIView):
         
         return Response (status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    
-    
-# class LoginApiView(generics.GenericAPIView):
-    
-#     serializer_class = LoginSerializer
-#     permission_classes = [permissions.AllowAny]
-    
-#     def post(self, request, *args, **kwargs):
-        
-#         serializer = LoginSerializer(data = request.data)
-        
-        
-#         if serializer.is_valid():
-#             email = serializer.data.get('email')
-#             password = serializer.data.get('password')
-            
-#             user = authenticate(email=email, password=password)
-            
-#             if user is not None:
-#                 return Response({'message':'Login Success'}, status= status.HTTP_200_OK)
-            
-#             return Response({'message':'Login Failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-
-
-
-
 
 class LoginApiView(generics.GenericAPIView):
     
