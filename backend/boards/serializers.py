@@ -13,11 +13,22 @@ class CardsSerializer(serializers.ModelSerializer):
 
 class BoardMemberSerializer(serializers.ModelSerializer):
 
+    username = serializers.CharField(source = "user.first_name" , read_only = True)
     class Meta:
         model = BoardMember
-        fields = "__all__"
+        fields = ['id', 'user', 'username','board', 'role', 'joined_at']
 
 
+class AddBoardMemberSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source ="user.first_name", write_only=True)
+
+    class Meta:
+        model = BoardMember
+        fields = ['username', 'role']
+        
+        
+        
+        
 class ListDetailsSerializer(serializers.ModelSerializer):    
 
     cards = CardsSerializer(many=True, read_only = True)
