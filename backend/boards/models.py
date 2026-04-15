@@ -38,7 +38,7 @@ class BoardMember(models.Model):
     
     class Meta:
         verbose_name = 'Board Member'
-    
+        unique_together = ['board','user']
 
 class Lists(models.Model):
     board = models.ForeignKey(Boards, on_delete=models.CASCADE, related_name="lists")

@@ -4,6 +4,9 @@ import api from "../api";
 import List from "./List";
 import CreateLists from "./CreateLists";
 import UandDList from "./UandDList";
+import BoardMembers from "./BoardMembers";
+import AddBoardMembers from "./AddBoardMembers";
+
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -37,6 +40,7 @@ const BoardDetail = () => {
       <h1 className="text-2xl font-bold mb-5">
         {board ? board.title : "Loading..."}
       </h1>
+      <BoardMembers board={board} />
 
       <div className="flex gap-4 overflow-x-auto">
         {lists.map((list) => (

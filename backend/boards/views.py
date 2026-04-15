@@ -1,14 +1,15 @@
-from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer
+from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer,BoardMemberSerializer,AddBoardMemberSerializer
 from .models import Boards, Cards,Lists, BoardMember
 from rest_framework import permissions,authentication
 from rest_framework import generics
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework import viewsets
 from .permissions import BoardRolePermission
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
 
+User = get_user_model()
 
 class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
@@ -96,3 +97,53 @@ class CardsViewSet(viewsets.ModelViewSet):
             serializer.save()
         
 
+
+class BoardMemberListAPIView(generics.ListAPIView):
+    serializer_class = BoardMemberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        board_id = self.kwargs.get("board_id")
+        return BoardMember.objects.filter(board_id = board_id)
+    
+
+
+class AddBoardMembersAPIView(generics.CreateAPIView):
+    serializer_class = AddBoardMemberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        board_id = self.kwargs.get("board_id")
+        email = serializer.validated_data.get("email")
+        
+        role = serializer.validated_data.get(
+        "role",
+          BoardMember.ROLE_MEMBER
+        ) 
+                   
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found")     
+           
+        serializer.validated_data.pop("email")
+           
+        serializer.save(
+            board_id = board_id,
+            user = user,
+            role = role,
+        )
+    
+
+class BoardMemberDestroyAPIView(generics.DestroyAPIView):
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        board_id = self.kwargs.get("board_id")
+        user_id = self.kwargs.get("user_id")
+
+        return BoardMember.objects.get(
+            board_id=board_id,
+            user_id=user_id
+        )

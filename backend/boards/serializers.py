@@ -20,11 +20,11 @@ class BoardMemberSerializer(serializers.ModelSerializer):
 
 
 class AddBoardMemberSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source ="user.first_name", write_only=True)
 
+    email = serializers.EmailField(write_only = True)
     class Meta:
         model = BoardMember
-        fields = ['username', 'role']
+        fields = ['email', 'role']
         
         
         

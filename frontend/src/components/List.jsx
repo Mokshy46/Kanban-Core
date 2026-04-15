@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "../api";
-import { useParams } from "react-router-dom";
 import CreateCards from "./CreateCards";
+import UandDCards from "./UandDCards";
 
 const List = ({ list }) => {
- 
+
 
   const [cards, setCards] = useState([]);
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const res = await api.get(`/api/lists/${list.id}/cards/`);
-        setCards(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
 
+  const fetchCards = async () => {
+    try {
+      const res = await api.get(`/api/lists/${list.id}/cards/`);
+      setCards(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
     fetchCards();
   }, [list.id]);
 
@@ -26,15 +27,19 @@ const List = ({ list }) => {
       <h2 className="font-bold mb-3">{list.title}</h2>
 
       {cards.map((card) => (
-        <div
-          key={card.id}
-          className="bg-white p-2 rounded mb-2 shadow"
-        >
-          {card.title}
+
+        <div key={card.id}>
+          <div
+            className="bg-white p-2 rounded mb-2 shadow"
+          >
+            {card.title}
+          </div>
+
+          <UandDCards card={card} refreshCards={fetchCards} />
         </div>
       ))}
 
-        <CreateCards listId={list.id} setCards={setCards} />
+      <CreateCards listId={list.id} setCards={setCards} />
     </div>
   );
 };
