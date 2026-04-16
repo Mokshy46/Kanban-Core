@@ -1,4 +1,4 @@
-from .models import Boards,Cards,Lists,BoardMember
+from .models import Boards,Cards,Lists,BoardMember,Activity
 from rest_framework import serializers
 
 class CardsSerializer(serializers.ModelSerializer):
@@ -24,11 +24,9 @@ class AddBoardMemberSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only = True)
     class Meta:
         model = BoardMember
-        fields = ['email', 'role']
+        fields = ['email', 'role',]
         
-        
-        
-        
+
 class ListDetailsSerializer(serializers.ModelSerializer):    
 
     cards = CardsSerializer(many=True, read_only = True)
@@ -58,3 +56,12 @@ class BoardDetailsSerializer(serializers.ModelSerializer):
         model = Boards
         fields = ['id', 'title','owner', 'lists']
 
+
+class ActivitySerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source = "user.first_name" , read_only = True)
+
+    class Meta:
+        model = Activity
+        fields = ['id','user','board','action', 'created_at', 'username']
+    
+    

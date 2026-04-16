@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import BoardsListAPIView,BoardsCreateAPIView, BoardsRetrieveUpdateDestroyAPIView,ListsViewSet,CardsViewSet, BoardMemberListAPIView,AddBoardMembersAPIView,BoardMemberDestroyAPIView
+from .views import BoardsListAPIView,BoardsCreateAPIView, BoardsRetrieveUpdateDestroyAPIView,ListsViewSet,CardsViewSet, BoardMemberListAPIView,AddBoardMembersAPIView,BoardMemberDestroyAPIView,ActivityListAPIView
 from rest_framework import routers
 
 
@@ -50,6 +50,7 @@ urlpatterns = [
     path('boards/<int:board_id>/add_members/', AddBoardMembersAPIView.as_view(), name='add_members'),
     path('boards/<int:board_id>/remove_member/<int:user_id>/', BoardMemberDestroyAPIView.as_view(), name='remove_members'),
 
+    path('boards/<int:board_id>/activities/', ActivityListAPIView.as_view(), name='activity'),
     path('', include(router.urls)),
     
 ]

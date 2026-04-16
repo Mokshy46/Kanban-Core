@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Boards,Lists,Cards,BoardMember
+from .models import Boards,Lists,Cards,BoardMember,Activity
 
 
 
@@ -28,3 +28,10 @@ class BoardMemberAdmin(admin.ModelAdmin):
     list_display = ('user', 'role', 'board',)
     search_fields = ('user', 'role', 'board',)
     ordering = ['-joined_at']
+    
+
+@admin.register(Activity)    
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ("user", "board", "action",)
+    search_fields = ("user", "board",)
+    ordering = ['-created_at']

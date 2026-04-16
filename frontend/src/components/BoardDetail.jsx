@@ -5,15 +5,14 @@ import List from "./List";
 import CreateLists from "./CreateLists";
 import UandDList from "./UandDList";
 import BoardMembers from "./BoardMembers";
-import AddBoardMembers from "./AddBoardMembers";
-
+import Activities from "./Activities";
 
 const BoardDetail = () => {
   const { id } = useParams();
 
   const [lists, setLists] = useState([]);
   const [board, setBoards] = useState(null);
-
+  const [activities, setActivities] = useState(false);
 
 
   const fetchLists = async () => {
@@ -36,6 +35,15 @@ const BoardDetail = () => {
 
   return (
     <div className="p-5">
+
+      <button onClick={() => setActivities(true)} className="font-bold">Show Activity Log</button>
+
+      {activities && (
+        <div>
+          <Activities board={board} />
+          <button onClick={() => setActivities(false)} className="font-bold"> Close </button>
+        </div>
+        )}
 
       <h1 className="text-2xl font-bold mb-5">
         {board ? board.title : "Loading..."}

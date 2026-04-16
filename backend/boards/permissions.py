@@ -7,14 +7,16 @@ class BoardRolePermission(permissions.BasePermission):
     
     def get_board(self, obj):
 
-        if hasattr(obj,'board'):
+        if isinstance(obj, Boards):
+            return obj
+        
+        elif isinstance(obj, Lists):
             return obj.board
         
-        elif hasattr(obj,'list'):
+        elif isinstance(obj, Cards):
             return obj.list.board
         
-        else:
-            return obj
+        return None
         
 
     def has_object_permission(self, request, view, obj):

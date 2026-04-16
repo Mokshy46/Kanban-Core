@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// 🔥 Handle token expiration
+// Handle token expiration
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -41,7 +41,7 @@ api.interceptors.response.use(
         return api(originalRequest);
 
       } catch (err) {
-        // Refresh failed → logout
+        // Refresh failed --> logout
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
 
