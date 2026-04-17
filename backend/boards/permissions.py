@@ -17,7 +17,6 @@ class BoardRolePermission(permissions.BasePermission):
             return obj.list.board
         
         return None
-        
 
     def has_object_permission(self, request, view, obj):
 
@@ -27,7 +26,6 @@ class BoardRolePermission(permissions.BasePermission):
             return False
 
         try:
-
             membership = BoardMember.objects.get(
                 user = request.user,
                 board = board,
@@ -39,8 +37,22 @@ class BoardRolePermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         
+        
+        
+        if isinstance(obj,BoardMember):
+                    
+            target = obj
+            
+            if membership.role == BoardMember.ROLE_OWNER:
+                return True
+            
+            if membership.role == BoardMember.ROLE_ADMIN:
+                return target.role == BoardMember.ROLE_MEMBER
+            
+            return False        
+                
+        
         if isinstance(obj,Boards):
-
             if request.method == "DELETE":
                 if membership.role in [BoardMember.ROLE_OWNER]:
                     return True
@@ -56,8 +68,6 @@ class BoardRolePermission(permissions.BasePermission):
                     return False
 
         else:
-
             if membership.role in [BoardMember.ROLE_ADMIN, BoardMember.ROLE_OWNER]:
                 return True
-
 

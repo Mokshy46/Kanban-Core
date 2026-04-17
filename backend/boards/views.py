@@ -20,7 +20,7 @@ def create_activity(user, board, action):
 
 class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     def get_queryset(self):
         return Boards.objects.filter(
             boardmember__user = self.request.user
@@ -29,7 +29,7 @@ class BoardsListAPIView(generics.ListAPIView):
 
 class BoardsCreateAPIView(generics.CreateAPIView):
     serializer_class = BoardsSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
 
     def perform_create(self, serializer):
         board = serializer.save(owner = self.request.user)
@@ -170,7 +170,7 @@ class CardsViewSet(viewsets.ModelViewSet):
 
 class BoardMemberListAPIView(generics.ListAPIView):
     serializer_class = BoardMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
@@ -180,7 +180,7 @@ class BoardMemberListAPIView(generics.ListAPIView):
 
 class AddBoardMembersAPIView(generics.CreateAPIView):
     serializer_class = AddBoardMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     
     def perform_create(self, serializer):
         board_id = self.kwargs.get("board_id")
@@ -189,8 +189,7 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
         role = serializer.validated_data.get(
         "role",
           BoardMember.ROLE_MEMBER
-        ) 
-                   
+        )                
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -211,9 +210,32 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
         )
     
 
+class BoardMemberRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = BoardMember.objects.all()
+    serializer_class = BoardMemberSerializer
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    def get_object(self):
+        board_id = self.kwargs.get("board_id")
+        user_id = self.kwargs.get("user_id")
+        user = User.objects.get(id = user_id)
+        
+        return BoardMember.objects.get(
+            board_id = board_id,
+            user = user,
+        )
+
+    def perform_update(self, serializer):
+        board_member = self.get_object()
+        
+        if self.request.user != board_member.board.owner :
+            raise PermissionError("You r not the owner")
+            
+        return super().perform_update(serializer)
+
+
 class BoardMemberDestroyAPIView(generics.DestroyAPIView):
     
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     
     def get_object(self):
         board_id = self.kwargs.get("board_id")
@@ -235,13 +257,30 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         
         instance = self.get_object()
-        
-        if instance.role == "owner":
+        current_user = BoardMember.objects.get(
+            user = request.user,
+            board = instance.board,
+        )
+
+        if instance.role == BoardMember.ROLE_OWNER:
             return Response(
                 {"error":"owner cant be deleted"},
                 status=status.HTTP_400_BAD_REQUEST
             )
             
+        if current_user.role == BoardMember.ROLE_ADMIN:
+            if instance.role != BoardMember.ROLE_MEMBER:
+                return Response(
+                    {"error":"Admins can only delete members"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )          
+                
+        create_activity(
+            user=self.request.user,
+            board = instance.board,
+            action=f"{instance.user.first_name} deleted from the board"
+        )        
+         
         self.perform_destroy(instance=instance)     
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -249,7 +288,7 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
 
 class ActivityListAPIView(generics.ListAPIView):
     serializer_class = ActivitySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")

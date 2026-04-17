@@ -35,7 +35,13 @@ const BoardMembers = ({ board }) => {
                     </p>
                     <p className='font-semibold'>{boardMember.role} </p>
 
-                    <DeleteBoardMembers board={board} refreshBoardMembersList={fetchBoardMembers} userId={boardMember.user}/>
+                    <DeleteBoardMembers 
+                    board={board} 
+                    refreshBoardMembersList={fetchBoardMembers} 
+                    userId={boardMember.user}
+                    boardMember={boardMember.role}
+                    
+                    />
                 </div>
 
             ))}
