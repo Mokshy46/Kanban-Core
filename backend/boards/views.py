@@ -8,6 +8,7 @@ from .permissions import BoardRolePermission
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied,ValidationError
 
 User = get_user_model()
 
@@ -120,7 +121,6 @@ class ListsViewSet(viewsets.ModelViewSet):
         instance.delete()
                 
 
-
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = Cards.objects.all()
     serializer_class = CardsSerializer
@@ -177,7 +177,6 @@ class BoardMemberListAPIView(generics.ListAPIView):
         return BoardMember.objects.filter(board_id = board_id)
     
 
-
 class AddBoardMembersAPIView(generics.CreateAPIView):
     serializer_class = AddBoardMemberSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
@@ -189,14 +188,23 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
         role = serializer.validated_data.get(
         "role",
           BoardMember.ROLE_MEMBER
-        )                
+        )             
+        current_user = BoardMember.objects.get(
+            board = board,
+            user = self.request.user,
+        )
+        
+        if current_user.role == BoardMember.ROLE_MEMBER:
+            raise PermissionDenied("members cannot add people")
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError("User not found")     
-           
-        serializer.validated_data.pop("email")
-           
+            raise serializers.ValidationError("User not found") 
+        
+        if BoardMember.objects.filter(board = board, user= user).exists():
+            raise ValidationError("User already exists")
+            
+        serializer.validated_data.pop("email")         
         serializer.save(
             board_id = board_id,
             user = user,
@@ -208,12 +216,13 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
             board=board,
             action=f"{user.first_name} added to the board"
         )
-    
 
+    
 class BoardMemberRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = BoardMember.objects.all()
     serializer_class = BoardMemberSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    
     def get_object(self):
         board_id = self.kwargs.get("board_id")
         user_id = self.kwargs.get("user_id")
@@ -229,25 +238,16 @@ class BoardMemberRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
         
         if self.request.user != board_member.board.owner :
             raise PermissionError("You r not the owner")
-            
+
         return super().perform_update(serializer)
 
 
-class BoardMemberDestroyAPIView(generics.DestroyAPIView):
-    
+class BoardMemberDestroyAPIView(generics.DestroyAPIView):  
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     
     def get_object(self):
         board_id = self.kwargs.get("board_id")
         user_id = self.kwargs.get("user_id")
-        board = Boards.objects.get(id = board_id)
-        deleted_user = User.objects.get(id = user_id)
-        
-        create_activity(
-            user=self.request.user,
-            board = board,
-            action=f"{deleted_user.first_name} deleted from the board"
-        )        
 
         return BoardMember.objects.get(
             board_id=board_id,
@@ -255,7 +255,6 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
         )
         
     def destroy(self, request, *args, **kwargs):
-        
         instance = self.get_object()
         current_user = BoardMember.objects.get(
             user = request.user,
@@ -274,13 +273,18 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
                     {"error":"Admins can only delete members"},
                     status=status.HTTP_400_BAD_REQUEST
                 )          
-                
+        
+        if current_user.role == BoardMember.ROLE_MEMBER:
+            return Response(
+                {"error":"Member cannot delete others"},
+                status=status.HTTP_400_BAD_REQUEST
+            )  
+        
         create_activity(
             user=self.request.user,
             board = instance.board,
             action=f"{instance.user.first_name} deleted from the board"
-        )        
-         
+        )              
         self.perform_destroy(instance=instance)     
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -293,5 +297,3 @@ class ActivityListAPIView(generics.ListAPIView):
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
         return Activity.objects.filter(board_id = board_id).order_by("-created_at")
-
-
