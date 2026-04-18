@@ -59,6 +59,7 @@ class Cards(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
     task_status = models.BooleanField(default=False)
+    assigned_to = models.ManyToManyField(User,related_name='assigned_to')
 
     def __str__(self):
         return self.title

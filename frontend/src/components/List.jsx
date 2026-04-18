@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../api";
 import CreateCards from "./CreateCards";
 import UandDCards from "./UandDCards";
+import AssignedMembers from "./AssignedMembers";
+
 
 const List = ({ list }) => {
 
@@ -34,7 +36,7 @@ const List = ({ list }) => {
           >
             {card.title}
           </div>
-
+          <AssignedMembers card={card} />
           <UandDCards card={card} refreshCards={fetchCards} />
         </div>
       ))}

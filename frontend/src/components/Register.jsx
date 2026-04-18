@@ -31,7 +31,6 @@ const Register = () => {
         setError("");
         setSuccess("");
 
-        // ✅ basic frontend validation
         if (formData.password !== formData.password_2) {
             setError("Passwords do not match");
             setIsLoading(false);
@@ -46,9 +45,8 @@ const Register = () => {
 
             console.log("Registration success:", response.data);
 
-            setSuccess("Account created successfully 🎉");
+            setSuccess("Account created successfully");
 
-            // optional: auto redirect to login
             setTimeout(() => {
                 window.location.href = "/";
             }, 1500);

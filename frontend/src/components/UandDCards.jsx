@@ -11,6 +11,8 @@ const UandDCards = ({ card, refreshCards }) => {
       description: card.description,
     }
   )
+  const [assignMember, setAssignMember] = useState("");
+  const [isAssigning, setIsAssigning] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,6 +23,9 @@ const UandDCards = ({ card, refreshCards }) => {
     )
   }
 
+  const handleAssignChange = (e) => {
+    setAssignMember(e.target.value);
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault()
@@ -38,6 +43,21 @@ const UandDCards = ({ card, refreshCards }) => {
     }
   }
 
+  const handleAssign = async (e) => {
+
+    try {
+      const response = await api.post(`/api/cards/${card.id}/assign/`,
+        { email: assignMember, }
+      );
+      setAssignMember("");
+      setIsAssigning(false);
+      refreshCards();
+    }
+
+    catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleDelete = async (e) => {
 
@@ -78,9 +98,36 @@ const UandDCards = ({ card, refreshCards }) => {
       </div>
 
     ) :
-      <div>
-        <button onClick={() => setIsEditing(true)}>edit</button>
-        <button onClick={handleDelete}>delete</button>
+      <div className='flex'>
+        <div className='gap-1'>
+          <button onClick={() => setIsEditing(true)}>edit</button>
+          <button onClick={handleDelete}>delete</button>
+        </div>
+
+        {isAssigning ? (
+          <div>
+            <input
+              type="email"
+              value={assignMember}
+              onChange={handleAssignChange}
+              placeholder="Enter email"
+            />
+
+            <button onClick={handleAssign}>Assign</button>
+            <button onClick={() => {
+              setIsAssigning(false);
+              setAssignMember("");
+            }}>
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div>
+            <button onClick={() => setIsAssigning(true)}>
+              Assign Member
+            </button>
+          </div>
+        )}
       </div>
   )
 }

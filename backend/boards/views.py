@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied,ValidationError
+from rest_framework.views import APIView
 
 User = get_user_model()
 
@@ -217,7 +218,6 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
             action=f"{user.first_name} added to the board"
         )
 
-    
 class BoardMemberRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = BoardMember.objects.all()
     serializer_class = BoardMemberSerializer
@@ -289,6 +289,54 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+
+class MemberAssignmentAPIView(APIView):
+    
+    
+    def get(self, request, *args, **kwargs): 
+        card_id = self.kwargs.get("card_id")      
+        try:
+            card = Cards.objects.get(id = card_id)
+        except Cards.DoesNotExist:
+            return Response({
+                "error":"card does not found"
+            })
+            
+        users = card.assigned_to.all()
+      
+        data = [
+            {"id":user.id,
+            "username":user.first_name}         
+            for user in users
+        ]
+        return Response(data, status=status.HTTP_200_OK)
+
+
+    def post(self, request, *args, **kwargs):
+        
+        email = request.data.get("email")
+        card_id = self.kwargs.get("card_id")
+
+        try:
+            card = Cards.objects.get(id = card_id)
+            
+        except Cards.DoesNotExist:
+            return Response({
+                "error":"Card Does NoT exists"
+            })
+            
+        try:
+            user = User.objects.get(email = email)
+        except User.DoesNotExist:
+            return Response({
+                "error":"User Does Not Found"
+            })
+        
+        card.assigned_to.add(user)
+        return Response({
+            "Assigned to card Successfully"
+        })
 
 class ActivityListAPIView(generics.ListAPIView):
     serializer_class = ActivitySerializer

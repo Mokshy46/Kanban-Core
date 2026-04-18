@@ -5,7 +5,7 @@ class CardsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Cards
-        fields = "__all__"
+        exclude = ['assigned_to']
         extra_kwargs = {
             'list' :{'read_only' : True},
             
