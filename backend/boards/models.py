@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from rest_framework import filters
-
+import uuid
 User = get_user_model()
+from datetime import timedelta
+from django.utils.timezone import now
+
 
 class Boards(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owned_boards")
@@ -79,3 +82,30 @@ class Activity(models.Model):
     def __str__(self):
         return f"{self.user} - {self.action}"
     
+    
+class InviteUser(models.Model):
+
+    ROLE_OWNER = "owner"
+    ROLE_ADMIN = "admin"
+    ROLE_MEMBER = "member"
+
+
+    ROLE_CHOICES = [
+        (ROLE_OWNER, "Owner"),
+        (ROLE_MEMBER, "Member"),
+        (ROLE_ADMIN, "Admin"),
+    ]
+    
+    
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    email = models.EmailField(unique=True)
+    board = models.ForeignKey(Boards, on_delete=models.CASCADE)
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    accepted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    role = models.CharField(max_length=22, choices=ROLE_CHOICES)
+    
+    
+   
+    def is_expired(self):
+        return self.created_at < now() - timedelta(days=2)
