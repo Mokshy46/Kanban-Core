@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import BoardsListAPIView,BoardsCreateAPIView, BoardsRetrieveUpdateDestroyAPIView,ListsViewSet,CardsViewSet, BoardMemberListAPIView,AddBoardMembersAPIView,BoardMemberDestroyAPIView,ActivityListAPIView,BoardMemberRetrieveUpdateAPIView,MemberAssignmentAPIView
+from .views import BoardsListAPIView,BoardsCreateAPIView, BoardsRetrieveUpdateDestroyAPIView,ListsViewSet,CardsViewSet, BoardMemberListAPIView,AddBoardMembersAPIView,BoardMemberDestroyAPIView,ActivityListAPIView,BoardMemberRetrieveUpdateAPIView,MemberAssignmentAPIView,InviteMemberCreateAPIView, ValidateInviteAPIView,InviteUserAcceptAPIView
 from rest_framework import routers
 
 
@@ -53,6 +53,11 @@ urlpatterns = [
 
     path('boards/<int:board_id>/activities/', ActivityListAPIView.as_view(), name='activity'),
     path('cards/<int:card_id>/assign/', MemberAssignmentAPIView.as_view(), name='assign_member'),
+    
+    path('boards/<int:board_id>/invite/', InviteMemberCreateAPIView.as_view(), name='send-invite'),
+    path('boards/invite/<uuid:token>/',ValidateInviteAPIView.as_view(), name='validate-invite'),
+    path('boards/accept-invite/<uuid:token>', InviteUserAcceptAPIView.as_view(), name='accept-invite'),
+    
     path('', include(router.urls)),
     
 ]

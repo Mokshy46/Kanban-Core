@@ -1,5 +1,5 @@
-from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer,BoardMemberSerializer,AddBoardMemberSerializer, ActivitySerializer
-from .models import Boards, Cards,Lists, BoardMember, Activity
+from .serializers import BoardsSerializer,CardsSerializer,BoardDetailsSerializer,ListDetailsSerializer,BoardMemberSerializer,AddBoardMemberSerializer, ActivitySerializer, InviteUserSerializer
+from .models import Boards, Cards,Lists, BoardMember, Activity, InviteUser
 from rest_framework import permissions,authentication
 from rest_framework import generics
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
@@ -10,6 +10,10 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied,ValidationError
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 User = get_user_model()
 
@@ -289,8 +293,6 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class MemberAssignmentAPIView(APIView):
     
     
@@ -345,3 +347,99 @@ class ActivityListAPIView(generics.ListAPIView):
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
         return Activity.objects.filter(board_id = board_id).order_by("-created_at")
+
+
+class InviteMemberCreateAPIView(generics.CreateAPIView):
+    
+    serializer_class = InviteUserSerializer
+    permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    
+    def perform_create(self,serializer):
+        email = serializer.validated_data.get("email")
+        role = serializer.validated_data.get("role")
+        board_id =self.kwargs.get("board_id")
+        
+        board = get_object_or_404(Boards, id=board_id)   
+            
+        invite = serializer.save(
+            
+            board=board,
+            invited_by = self.request.user,
+        )
+        
+        link = f"http://localhost:5173/invite/{invite.token}"
+
+
+        message = f"""
+        You've been invited to join a board.
+
+        Board: {board.title}
+        Role: {invite.role}
+
+        Click here to join:
+        {link}
+        """
+
+        send_mail(
+            "Board Invitation",
+            message,
+            settings.EMAIL_HOST_USER,
+            [invite.email],
+)
+        
+    
+    
+class ValidateInviteAPIView(APIView):
+    
+    def get(self, request, token):
+        
+        try:
+            invite = InviteUser.objects.get(token=token)
+            
+            if invite.accepted:
+                return Response({"error":"user already exists"})
+            
+            return Response({
+                "email": invite.email,
+                "board": invite.board.title,
+                "role": invite.role
+            })
+            
+        except InviteUser.DoesNotExist:
+            return Response({
+                "error": "Invalid token"
+            })
+        
+
+class InviteUserAcceptAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, token):
+        try:
+            invite = InviteUser.objects.get(token=token)
+
+            if invite.accepted:
+                return Response({"error": "Invite already used"}, status=400)
+
+            if invite.is_expired():
+                return Response({"error": "Invite expired"}, status=400)
+
+            if request.user.email != invite.email:
+                return Response({"error": "This invite is not for you"}, status=403)
+
+            if BoardMember.objects.filter(user=request.user, board=invite.board).exists():
+                return Response({"error": "Already a member"}, status=400)
+
+            BoardMember.objects.create(
+                user=request.user,
+                board=invite.board,
+                role=invite.role,
+            )
+
+            invite.accepted = True
+            invite.save()
+
+            return Response({"message": "Successfully joined board"}, status=200)
+
+        except InviteUser.DoesNotExist:
+            return Response({"error": "Invalid token"}, status=404)

@@ -6,6 +6,7 @@ import CreateLists from "./CreateLists";
 import UandDList from "./UandDList";
 import BoardMembers from "./BoardMembers";
 import Activities from "./Activities";
+import InviteUser from "./InviteUser";
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -43,8 +44,9 @@ const BoardDetail = () => {
           <Activities board={board} />
           <button onClick={() => setActivities(false)} className="font-bold"> Close </button>
         </div>
-        )}
+      )}
 
+      <InviteUser boardId={id} />
       <h1 className="text-2xl font-bold mb-5">
         {board ? board.title : "Loading..."}
       </h1>

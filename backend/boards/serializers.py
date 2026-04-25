@@ -1,4 +1,4 @@
-from .models import Boards,Cards,Lists,BoardMember,Activity
+from .models import Boards,Cards,Lists,BoardMember,Activity,InviteUser
 from rest_framework import serializers
 
 class CardsSerializer(serializers.ModelSerializer):
@@ -64,4 +64,11 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = ['id','user','board','action', 'created_at', 'username']
     
+
+
+class InviteUserSerializer(serializers.ModelSerializer):
     
+    class Meta:
+        model = InviteUser
+        fields = ["email","role"]
+  

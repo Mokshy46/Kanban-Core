@@ -7,7 +7,7 @@ import CreateBoard from "./components/CreateBoard";
 import CreateCards from "./components/CreateCards";
 import BoardDetail from "./components/BoardDetail";
 import CreateLists from "./components/CreateLists";
-
+import AcceptInvite from "./components/AcceptInvite";
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
       <Route path="/create" element={<CreateBoard />} />
       {/* <Route path="/lists/:id/create-card" element={<CreateCards />} /> */}
       <Route path="/boards/:id" element={<BoardDetail />} />
+      <Route path="/invite/:token" element={<AcceptInvite />} />
       {/* <Route path="boards/:id/lists/" element ={<CreateLists/>} /> */}
       {/* <Route path="/lists/:id/create-card" element={<CreateCards />} /> */}
     </Routes>
