@@ -98,7 +98,7 @@ class InviteUser(models.Model):
     
     
     token = models.UUIDField(default=uuid.uuid4, unique=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     board = models.ForeignKey(Boards, on_delete=models.CASCADE)
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
@@ -109,3 +109,6 @@ class InviteUser(models.Model):
    
     def is_expired(self):
         return self.created_at < now() - timedelta(days=2)
+    
+    class Meta:
+        unique_together = ["email", "board"]

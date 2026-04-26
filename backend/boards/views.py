@@ -395,7 +395,6 @@ class ValidateInviteAPIView(APIView):
         
         try:
             invite = InviteUser.objects.get(token=token)
-            
             if invite.accepted:
                 return Response({"error":"user already exists"})
             

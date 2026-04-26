@@ -56,7 +56,7 @@ urlpatterns = [
     
     path('boards/<int:board_id>/invite/', InviteMemberCreateAPIView.as_view(), name='send-invite'),
     path('boards/invite/<uuid:token>/',ValidateInviteAPIView.as_view(), name='validate-invite'),
-    path('boards/accept-invite/<uuid:token>', InviteUserAcceptAPIView.as_view(), name='accept-invite'),
+    path('boards/accept_invite/<uuid:token>/', InviteUserAcceptAPIView.as_view(), name='accept-invite'),
     
     path('', include(router.urls)),
     

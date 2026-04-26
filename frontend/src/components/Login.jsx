@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const Login = () => {
 
+    const location = useLocation();
     const navigate = useNavigate();
+
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get("redirect");
 
     const [formData, setFormData] = useState({
         email: "",
@@ -43,7 +47,7 @@ const Login = () => {
             console.log("Login success:", response.data);
 
 
-            navigate("/boards");
+        navigate(redirect || "/boards");
 
         } catch (error) {
             console.log("Error during Login", error.response?.data);
