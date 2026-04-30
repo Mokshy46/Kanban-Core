@@ -20,8 +20,40 @@ const Activities = ({ board }) => {
     }
 
     useEffect(() => {
-        if (!board) return;
+        if (!board?.id) return;
+
         fetchActivities();
+
+        const socket = new WebSocket(
+            `ws://127.0.0.1:8000/ws/boards/${board.id}/`
+        );
+
+        socket.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+
+            if (data.type === "activity") {
+
+                setActivities(prev => [...prev, {
+                    id: Date.now(),
+                    username: data.user,
+                    action: data.action,
+                }
+                ]);
+
+                socket.onopen = () => {
+                    console.log("webscoket connected");
+
+                };
+
+                socket.onclose = () => {
+                    console.log("wbescoket disconnected");
+                };
+                socket.onerror = (e) => console.log("ERROR", e);
+                return () => {
+                    socket.close();
+                };
+            }
+        }
     }, [board?.id])
 
     return (
