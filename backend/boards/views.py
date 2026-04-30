@@ -14,15 +14,30 @@ from rest_framework.decorators import api_view
 from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 User = get_user_model()
 
 def create_activity(user, board, action):
-    return Activity.objects.create(
-        user = user,
-        board = board,
-        action = action,
+    
+    activity =  Activity.objects.create(
+                    user = user,
+                    board = board,
+                    action = action,
+                )
+    
+    channel_layers = get_channel_layer()
+    
+    async_to_sync(channel_layers.group_send)(
+        f"board_{board.id}",
+        {
+            "type":"activity_event",
+            "user":user.first_name,
+            "action":action,
+        }
     )
+    return activity
 
 class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
@@ -317,7 +332,7 @@ class MemberAssignmentAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         
-        email = request.data.get("email")
+        user_id = request.data.get("user_id")
         card_id = self.kwargs.get("card_id")
 
         try:
@@ -327,19 +342,24 @@ class MemberAssignmentAPIView(APIView):
             return Response({
                 "error":"Card Does NoT exists"
             })
-            
+                             
         try:
-            user = User.objects.get(email = email)
+            user = User.objects.get(id = user_id)
         except User.DoesNotExist:
             return Response({
                 "error":"User Does Not Found"
             })
-        
         card.assigned_to.add(user)
+        
+        create_activity(
+            user=self.request.user,
+            board=card.list.board,
+            action= f"{user.first_name} assigned to the card"
+        )
         return Response({
-            "Assigned to card Successfully"
-        })
-
+            "message": "Assigned to card successfully"
+        }, status=status.HTTP_200_OK)
+        
 class ActivityListAPIView(generics.ListAPIView):
     serializer_class = ActivitySerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
@@ -415,7 +435,7 @@ class InviteUserAcceptAPIView(APIView):
     def post(self, request, token):
         try:
             invite = InviteUser.objects.get(token=token)
-
+            user = User.objects.get(email = invite.email)
             if invite.accepted:
                 return Response({"error": "Invite already used"}, status=400)
 
@@ -436,6 +456,12 @@ class InviteUserAcceptAPIView(APIView):
 
             invite.accepted = True
             invite.save()
+                    
+            create_activity(
+                user = invite.invited_by,
+                board=invite.board,
+                action=f"{user.first_name} joined the board "
+            )
 
             return Response({"message": "Successfully joined board"}, status=200)
 
