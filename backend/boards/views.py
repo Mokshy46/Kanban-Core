@@ -387,8 +387,7 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
             [invite.email],
 )
         
-    
-    
+  
 class ValidateInviteAPIView(APIView):
     
     def get(self, request, token):
