@@ -1,10 +1,11 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import api from '../api'
 
-const UandDCards = ({ card, refreshCards }) => {
+const UandDCards = ({ card, refreshCards,board }) => {
 
   const [isEditing, setIsEditing] = useState(false)
+  const [boardMembers, setBoardMembers] = useState([]);
   const [formData, setFormData] = useState(
     {
       title: card.title,
@@ -14,6 +15,29 @@ const UandDCards = ({ card, refreshCards }) => {
   const [assignMember, setAssignMember] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
 
+  const fetchBoardMembers = async () => {
+    try {
+
+      const response = await api.get(
+        `/api/boards/${board.id}/members/`
+      );
+    console.log(response.data);
+
+      setBoardMembers(response.data);
+
+    }
+
+    catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+
+    if (board?.id) {
+      fetchBoardMembers();
+    }
+
+  }, [card?.list?.board?.id]);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -47,7 +71,7 @@ const UandDCards = ({ card, refreshCards }) => {
 
     try {
       const response = await api.post(`/api/cards/${card.id}/assign/`,
-        { email: assignMember, }
+        { member_id: assignMember }
       );
       setAssignMember("");
       setIsAssigning(false);
@@ -106,12 +130,27 @@ const UandDCards = ({ card, refreshCards }) => {
 
         {isAssigning ? (
           <div>
-            <input
-              type="email"
+            <select
               value={assignMember}
               onChange={handleAssignChange}
-              placeholder="Enter email"
-            />
+            >
+
+              <option value="">
+                Select Member
+              </option>
+
+              {boardMembers.map((member) => (
+
+                <option
+                  key={member.id}
+                  value={member.id}
+                >
+                  {member.username}
+                </option>
+
+              ))}
+
+            </select>
 
             <button onClick={handleAssign}>Assign</button>
             <button onClick={() => {
