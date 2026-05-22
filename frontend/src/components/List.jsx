@@ -5,7 +5,7 @@ import UandDCards from "./UandDCards";
 import AssignedMembers from "./AssignedMembers";
 
 
-const List = ({ list }) => {
+const List = ({ list , board}) => {
 
 
   const [cards, setCards] = useState([]);
@@ -37,7 +37,7 @@ const List = ({ list }) => {
             {card.title}
           </div>
           <AssignedMembers card={card} />
-          <UandDCards card={card} refreshCards={fetchCards} />
+          <UandDCards card={card} board={board} refreshCards={fetchCards} />
         </div>
       ))}
 
