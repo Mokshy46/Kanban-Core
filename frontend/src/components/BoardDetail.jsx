@@ -55,7 +55,7 @@ const BoardDetail = () => {
       <div className="flex gap-4 overflow-x-auto">
         {lists.map((list) => (
           <div key={list.id}>
-            <List list={list} />
+            <List list={list} board={board} />
             <UandDList list={list} refreshList={fetchLists} />
           </div>
         ))}
