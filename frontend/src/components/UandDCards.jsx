@@ -2,7 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import api from '../api'
 
-const UandDCards = ({ card, refreshCards,board }) => {
+const UandDCards = ({ card, setLists,board }) => {
 
   const [isEditing, setIsEditing] = useState(false)
   const [boardMembers, setBoardMembers] = useState([]);
@@ -51,21 +51,41 @@ const UandDCards = ({ card, refreshCards,board }) => {
     setAssignMember(e.target.value);
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault()
+const handleUpdate = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await api.patch(`/api/cards/${card.id}/`, formData)
+  try {
 
-      setFormData(response.data)
-      setIsEditing(false)
-      refreshCards();
-    }
+    const response = await api.patch(
+      `/api/cards/${card.id}/`,
+      formData
+    );
 
-    catch (error) {
-      console.log(error)
-    }
+    const updatedCard = response.data;
+
+    setLists((prevLists) =>
+
+      prevLists.map((list) => ({
+
+        ...list,
+
+        cards: list.cards.map((c) =>
+
+          c.id === updatedCard.id
+            ? updatedCard
+            : c
+        ),
+      }))
+    );
+
+    setFormData(updatedCard);
+
+    setIsEditing(false);
+
+  } catch (error) {
+    console.log(error);
   }
+};
 
   const handleAssign = async (e) => {
 
@@ -75,7 +95,6 @@ const UandDCards = ({ card, refreshCards,board }) => {
       );
       setAssignMember("");
       setIsAssigning(false);
-      refreshCards();
     }
 
     catch (error) {
@@ -87,7 +106,6 @@ const UandDCards = ({ card, refreshCards,board }) => {
 
     try {
       await api.delete(`/api/cards/${card.id}/`)
-      refreshCards();
     }
     catch (error) {
       console.log(error)

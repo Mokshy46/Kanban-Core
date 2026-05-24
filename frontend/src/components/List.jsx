@@ -3,45 +3,43 @@ import api from "../api";
 import CreateCards from "./CreateCards";
 import UandDCards from "./UandDCards";
 import AssignedMembers from "./AssignedMembers";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
+
+const List = ({ list, board, setLists, }) => {
 
 
-const List = ({ list , board}) => {
-
-
-  const [cards, setCards] = useState([]);
-
-
-  const fetchCards = async () => {
-    try {
-      const res = await api.get(`/api/lists/${list.id}/cards/`);
-      setCards(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchCards();
-  }, [list.id]);
+  
 
   return (
     <div className="bg-gray-200 p-4 rounded w-64 min-w-[250px]">
       <h2 className="font-bold mb-3">{list.title}</h2>
 
-      {cards.map((card) => (
-
-        <div key={card.id}>
-          <div
-            className="bg-white p-2 rounded mb-2 shadow"
+      {list.cards.map(
+        (card, index) => (
+          <Draggable
+            key={card.id}
+            draggableId={String(card.id)}
+            index={index}
           >
-            {card.title}
-          </div>
-          <AssignedMembers card={card} />
-          <UandDCards card={card} board={board} refreshCards={fetchCards} />
-        </div>
-      ))}
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                <div
+                  className="bg-white p-2 rounded mb-2 shadow"
 
-      <CreateCards listId={list.id} setCards={setCards} />
+                >
+                  {card.title}
+                </div>
+                <AssignedMembers card={card} />
+                <UandDCards card={card} board={board} setLists={setLists} />
+                {provided.placeholder}
+              </div>
+            )}
+
+          </Draggable>
+
+        ))}
+
+      <CreateCards listId={list.id} setLists={setLists} />
     </div>
   );
 };

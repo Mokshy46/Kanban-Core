@@ -7,6 +7,7 @@ import UandDList from "./UandDList";
 import BoardMembers from "./BoardMembers";
 import Activities from "./Activities";
 import InviteUser from "./InviteUser";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -34,6 +35,97 @@ const BoardDetail = () => {
     fetchLists();
   }, [id]);
 
+
+  function onDragEnd(result) {
+
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    const currentList = lists.find(
+      (list) => String(list.id) === source.droppableId
+    );
+
+    const destinationList = lists.find(
+      (list) => String(list.id) === destination.droppableId
+    );
+    const currentItems = [...currentList.cards]
+
+    const [removed] = currentItems.splice(source.index, 1);
+
+    if (
+      source.droppableId ===
+      destination.droppableId
+    ) {
+      currentItems.splice(
+        destination.index,
+        0,
+        removed
+      );
+
+      const updatedLists = lists.map(
+        (list) => {
+          if (
+            String(list.id) ===
+            source.droppableId
+          ) {
+            return {
+              ...list,
+              cards: currentItems,
+            };
+          }
+
+          return list;
+        }
+      );
+
+      setLists(updatedLists);
+
+      return;
+    }
+
+    const destinationCards = [
+      ...destinationList.cards,
+    ];
+
+    destinationCards.splice(
+      destination.index,
+      0,
+      removed
+    );
+
+    const updatedLists = lists.map(
+      (list) => {
+
+        // update source list
+        if (
+          String(list.id) ===
+          source.droppableId
+        ) {
+          return {
+            ...list,
+            cards: currentItems,
+          };
+        }
+
+        // update destination list
+        if (
+          String(list.id) ===
+          destination.droppableId
+        ) {
+          return {
+            ...list,
+            cards: destinationCards,
+          };
+        }
+
+        return list;
+      }
+    );
+
+    setLists(updatedLists);
+
+  }
   return (
     <div className="p-5">
 
@@ -52,16 +144,29 @@ const BoardDetail = () => {
       </h1>
       <BoardMembers board={board} />
 
-      <div className="flex gap-4 overflow-x-auto">
-        {lists.map((list) => (
-          <div key={list.id}>
-            <List list={list} board={board} />
-            <UandDList list={list} refreshList={fetchLists} />
-          </div>
-        ))}
+      <DragDropContext onDragEnd={onDragEnd}>
 
-        <CreateLists boardId={id} setLists={setLists} />
-      </div>
+
+        <div className="flex gap-4 overflow-x-auto">
+          {lists.map((list) => (
+            <Droppable droppableId={String(list.id)} key={list.id}>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  <List list={list} board={board} setLists={setLists} />
+                  <UandDList list={list} refreshList={fetchLists} />
+                  {provided.placeholder}
+                </div>
+              )}
+
+            </Droppable>
+          ))}
+
+          <CreateLists boardId={id} setLists={setLists} />
+        </div>
+      </DragDropContext>
     </div>
   );
 };
