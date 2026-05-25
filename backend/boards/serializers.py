@@ -8,6 +8,7 @@ class CardsSerializer(serializers.ModelSerializer):
         exclude = ['assigned_to']
         extra_kwargs = {
             'list' :{'read_only' : True},
+            'position': {'read_only':True},
             
         }       
 

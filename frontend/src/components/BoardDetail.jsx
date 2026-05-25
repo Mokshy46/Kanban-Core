@@ -36,7 +36,7 @@ const BoardDetail = () => {
   }, [id]);
 
 
-  function onDragEnd(result) {
+  async function onDragEnd(result) {
 
     const { source, destination } = result;
 
@@ -81,6 +81,20 @@ const BoardDetail = () => {
 
       setLists(updatedLists);
 
+      try {
+        await api.patch(`/api/cards/${removed.id}/moved/`,
+          {
+            list_id: destinationList.id,
+            position: destination.index,
+          }
+        );
+
+      }
+
+      catch (error) {
+        console.log(error);
+      };
+
       return;
     }
 
@@ -96,8 +110,6 @@ const BoardDetail = () => {
 
     const updatedLists = lists.map(
       (list) => {
-
-        // update source list
         if (
           String(list.id) ===
           source.droppableId
@@ -108,7 +120,6 @@ const BoardDetail = () => {
           };
         }
 
-        // update destination list
         if (
           String(list.id) ===
           destination.droppableId
@@ -124,6 +135,21 @@ const BoardDetail = () => {
     );
 
     setLists(updatedLists);
+
+    try {
+      await api.patch(`/api/cards/${removed.id}/moved/`,
+        {
+          list_id: destinationList.id,
+          position: destination.index,
+        }
+      );
+
+    }
+
+    catch (error) {
+      console.log(error);
+    };
+
 
   }
   return (

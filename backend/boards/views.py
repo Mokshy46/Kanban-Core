@@ -467,3 +467,25 @@ class InviteUserAcceptAPIView(APIView):
 
         except InviteUser.DoesNotExist:
             return Response({"error": "Invalid token"}, status=404)
+        
+        
+        
+@api_view(['PATCH'])
+def move_card(request,pk):
+    
+    try:
+        card = Cards.objects.get(pk=pk)
+        
+    except Cards.DoesNotExist:
+        return Response({'error':'Card does not exists'}, status=404)
+    
+    
+    new_position = request.data.get("position")
+    new_list_id = request.data.get("list_id")
+    
+    card.list_id = new_list_id
+    card.position = new_position
+    
+    card.save()
+    
+    return Response({'success':'card moved successfully'})

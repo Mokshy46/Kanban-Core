@@ -63,6 +63,8 @@ class Cards(models.Model):
     description = models.TextField(blank=True)
     task_status = models.BooleanField(default=False)
     assigned_to = models.ManyToManyField(User,related_name='assigned_to')
+    
+    position = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title

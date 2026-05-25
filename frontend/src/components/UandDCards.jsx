@@ -1,8 +1,8 @@
 import React from 'react'
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import api from '../api'
 
-const UandDCards = ({ card, setLists,board }) => {
+const UandDCards = ({ card, setLists, board }) => {
 
   const [isEditing, setIsEditing] = useState(false)
   const [boardMembers, setBoardMembers] = useState([]);
@@ -21,7 +21,7 @@ const UandDCards = ({ card, setLists,board }) => {
       const response = await api.get(
         `/api/boards/${board.id}/members/`
       );
-    console.log(response.data);
+      console.log(response.data);
 
       setBoardMembers(response.data);
 
@@ -51,41 +51,41 @@ const UandDCards = ({ card, setLists,board }) => {
     setAssignMember(e.target.value);
   };
 
-const handleUpdate = async (e) => {
-  e.preventDefault();
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-  try {
+    try {
 
-    const response = await api.patch(
-      `/api/cards/${card.id}/`,
-      formData
-    );
+      const response = await api.patch(
+        `/api/cards/${card.id}/`,
+        formData
+      );
 
-    const updatedCard = response.data;
+      const updatedCard = response.data;
 
-    setLists((prevLists) =>
+      setLists((prevLists) =>
 
-      prevLists.map((list) => ({
+        prevLists.map((list) => ({
 
-        ...list,
+          ...list,
 
-        cards: list.cards.map((c) =>
+          cards: list.cards.map((c) =>
 
-          c.id === updatedCard.id
-            ? updatedCard
-            : c
-        ),
-      }))
-    );
+            c.id === updatedCard.id
+              ? updatedCard
+              : c
+          ),
+        }))
+      );
 
-    setFormData(updatedCard);
+      setFormData(updatedCard);
 
-    setIsEditing(false);
+      setIsEditing(false);
 
-  } catch (error) {
-    console.log(error);
-  }
-};
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleAssign = async (e) => {
 
@@ -102,15 +102,32 @@ const handleUpdate = async (e) => {
     }
   }
 
-  const handleDelete = async (e) => {
+  const handleDelete = async () => {
+
+
+    setLists((prevLists) =>
+
+      prevLists.map((list) => ({
+
+        ...list,
+
+        cards: list.cards.filter(
+          (c) => c.id !== card.id
+        ),
+      }))
+    );
 
     try {
-      await api.delete(`/api/cards/${card.id}/`)
+
+      await api.delete(
+        `/api/cards/${card.id}/`
+      );
+
+    } catch (error) {
+
+      console.log(error);
     }
-    catch (error) {
-      console.log(error)
-    }
-  }
+  };
 
   return (
     isEditing ? (

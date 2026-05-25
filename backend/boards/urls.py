@@ -1,7 +1,7 @@
 from django.urls import path,include
 from .views import BoardsListAPIView,BoardsCreateAPIView, BoardsRetrieveUpdateDestroyAPIView,ListsViewSet,CardsViewSet, BoardMemberListAPIView,AddBoardMembersAPIView,BoardMemberDestroyAPIView,ActivityListAPIView,BoardMemberRetrieveUpdateAPIView,MemberAssignmentAPIView,InviteMemberCreateAPIView, ValidateInviteAPIView,InviteUserAcceptAPIView
 from rest_framework import routers
-
+from . import views
 
 router = routers.DefaultRouter()
 router.register(r'lists', ListsViewSet)
@@ -58,6 +58,7 @@ urlpatterns = [
     path('boards/invite/<uuid:token>/',ValidateInviteAPIView.as_view(), name='validate-invite'),
     path('boards/accept_invite/<uuid:token>/', InviteUserAcceptAPIView.as_view(), name='accept-invite'),
     
+    path('cards/<int:pk>/moved/', views.move_card, name='move_card'),
     path('', include(router.urls)),
     
 ]

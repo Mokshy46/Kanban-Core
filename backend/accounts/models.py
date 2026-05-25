@@ -49,7 +49,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 
     email = models.EmailField(unique=True,max_length=255)
     first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)  
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null= True)
 
     facebook_link = models.URLField(max_length=255, blank=True)
     instagram_link = models.URLField(max_length=255, blank=True)

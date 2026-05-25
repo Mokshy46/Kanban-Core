@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import api from "../api";
 
-const CreateCards = ({ listId, setCards }) => {
+const CreateCards = ({ listId, setLists }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,8 +26,28 @@ const CreateCards = ({ listId, setCards }) => {
         formData
       );
 
-      setCards((prev) => [...prev, response.data]);
+      const newCard = response.data;
 
+      setLists((prevLists) =>
+
+        prevLists.map((list) => {
+
+          if (list.id === listId) {
+
+            return {
+
+              ...list,
+
+              cards: [
+                ...list.cards,
+                newCard
+              ]
+            };
+          }
+
+          return list;
+        })
+      );
       setFormData({ title: "", description: "" });
       setIsAdding(false);
     } catch (error) {
