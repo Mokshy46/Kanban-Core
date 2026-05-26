@@ -17,7 +17,6 @@ const UandDCards = ({ card, setLists, board }) => {
 
   const fetchBoardMembers = async () => {
     try {
-
       const response = await api.get(
         `/api/boards/${board.id}/members/`
       );
@@ -37,7 +36,9 @@ const UandDCards = ({ card, setLists, board }) => {
       fetchBoardMembers();
     }
 
-  }, [card?.list?.board?.id]);
+  }, [board?.id]);
+
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -69,12 +70,7 @@ const UandDCards = ({ card, setLists, board }) => {
 
           ...list,
 
-          cards: list.cards.map((c) =>
-
-            c.id === updatedCard.id
-              ? updatedCard
-              : c
-          ),
+          cards: list.cards.map((c) => c.id === updatedCard.id ? updatedCard : c),
         }))
       );
 
@@ -91,7 +87,7 @@ const UandDCards = ({ card, setLists, board }) => {
 
     try {
       const response = await api.post(`/api/cards/${card.id}/assign/`,
-        { member_id: assignMember }
+        { user_id: assignMember }
       );
       setAssignMember("");
       setIsAssigning(false);
@@ -103,28 +99,20 @@ const UandDCards = ({ card, setLists, board }) => {
   }
 
   const handleDelete = async () => {
-
-
     setLists((prevLists) =>
 
       prevLists.map((list) => ({
 
         ...list,
 
-        cards: list.cards.filter(
-          (c) => c.id !== card.id
-        ),
+        cards: list.cards.filter((c) => c.id !== card.id),
       }))
     );
 
     try {
-
-      await api.delete(
-        `/api/cards/${card.id}/`
-      );
-
-    } catch (error) {
-
+      await api.delete(`/api/cards/${card.id}/`);
+    }
+    catch (error) {
       console.log(error);
     }
   };
@@ -178,7 +166,7 @@ const UandDCards = ({ card, setLists, board }) => {
 
                 <option
                   key={member.id}
-                  value={member.id}
+                  value={member.user}
                 >
                   {member.username}
                 </option>

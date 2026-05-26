@@ -360,6 +360,38 @@ class MemberAssignmentAPIView(APIView):
             "message": "Assigned to card successfully"
         }, status=status.HTTP_200_OK)
         
+    def delete(self, request, *args, **kwargs):
+
+        user_id = request.data.get("user_id")
+        card_id = self.kwargs.get("card_id")
+
+        try:
+            card = Cards.objects.get(id=card_id)
+
+        except Cards.DoesNotExist:
+            return Response({
+                "error": "Card does not exist"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            user = User.objects.get(id=user_id)
+
+        except User.DoesNotExist:
+            return Response({
+                "error": "User not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        card.assigned_to.remove(user)
+        create_activity(
+            user=self.request.user,
+            board=card.list.board,
+            action=f"{user.first_name} unassigned from the card"
+        )
+
+        return Response({
+            "message": "User unassigned successfully"
+        }, status=status.HTTP_200_OK)
+        
 class ActivityListAPIView(generics.ListAPIView):
     serializer_class = ActivitySerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]

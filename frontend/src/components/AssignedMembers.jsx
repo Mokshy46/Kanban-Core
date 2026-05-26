@@ -10,8 +10,9 @@ const AssignedMembers = ({ card }) => {
 
         try {
             const response = await api.get(`/api/cards/${card.id}/assign/`);
-            setMembers(response.data);
-           
+            setMembers(response.data)
+
+            console.log(response.data)
 
         }
         catch (error) {
@@ -19,28 +20,58 @@ const AssignedMembers = ({ card }) => {
         }
     }
 
+    const handleUnassign = async (memberId) => {
+
+        try {
+
+            await api.delete(`/api/cards/${card.id}/assign/`,
+                {
+                    data: { user_id: memberId }
+                }
+            );
+
+            setMembers((prev) =>
+                prev.filter((member) => member.id !== memberId)
+            );
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    };
+
+
     useEffect(() => {
-        fetchMembers();
-    }, [show]);
+
+        if (show && card?.id) {
+            fetchMembers();
+        }
+
+    }, [show, card?.id]);
 
     return (
-        show?(
+        show ? (
 
             <div>
-                {members.map((member) =>(
+                {members.map((member) => (
                     <div key={member.id}>
                         <p className='p-2'>
                             {member.username}
                         </p>
+                        <button
+                            onClick={() => handleUnassign(member.id)}
+                        >
+                            Unassign
+                        </button>
                     </div>
                 ))}
                 <button onClick={() => setshow(false)}>close</button>
             </div>
-        ):
-        (
-            <button onClick={() => setshow(true)}> show members assigned</button>
-        )
-       
+        ) :
+            (
+                <button onClick={() => setshow(true)}> show members assigned</button>
+            )
+
     )
 }
 

@@ -52,3 +52,10 @@ class LoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email','password']
         
+class UserProfileSerializer(serializers.ModelSerializer):
+    
+    avatar = serializers.ImageField()
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','avatar','facebook_link','instagram_link']
+        read_only_field = ['email']
