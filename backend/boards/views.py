@@ -319,7 +319,8 @@ class MemberAssignmentAPIView(APIView):
         except Cards.DoesNotExist:
             return Response({
                 "error":"card does not found"
-            })
+            },
+            status=status.HTTP_404_NOT_FOUND)
             
         users = card.assigned_to.all()
       
@@ -342,14 +343,15 @@ class MemberAssignmentAPIView(APIView):
         except Cards.DoesNotExist:
             return Response({
                 "error":"Card Does NoT exists"
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
                              
         try:
             user = User.objects.get(id = user_id)
         except User.DoesNotExist:
             return Response({
                 "error":"User Does Not Found"
-            })
+            },
+            status=status.HTTP_404_NOT_FOUND)
         card.assigned_to.add(user)
         
         create_activity(
@@ -448,18 +450,19 @@ class ValidateInviteAPIView(APIView):
         try:
             invite = InviteUser.objects.get(token=token)
             if invite.accepted:
-                return Response({"error":"user already exists"})
+                return Response({"error":"user already exists"},
+                                status=status.HTTP_400_BAD_REQUEST)
             
             return Response({
                 "email": invite.email,
                 "board": invite.board.title,
                 "role": invite.role
-            })
+            },status=status.HTTP_200_OK)
             
         except InviteUser.DoesNotExist:
             return Response({
                 "error": "Invalid token"
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
         
 
 class InviteUserAcceptAPIView(APIView):
@@ -470,16 +473,16 @@ class InviteUserAcceptAPIView(APIView):
             invite = InviteUser.objects.get(token=token)
             user = User.objects.get(email = invite.email)
             if invite.accepted:
-                return Response({"error": "Invite already used"}, status=400)
+                return Response({"error": "Invite already used"}, status=status.HTTP_400_BAD_REQUEST)
 
             if invite.is_expired():
-                return Response({"error": "Invite expired"}, status=400)
+                return Response({"error": "Invite expired"}, status=status.HTTP_400_BAD_REQUEST)
 
             if request.user.email != invite.email:
-                return Response({"error": "This invite is not for you"}, status=403)
+                return Response({"error": "This invite is not for you"}, status=status.HTTP_403_FORBIDDEN)
 
             if BoardMember.objects.filter(user=request.user, board=invite.board).exists():
-                return Response({"error": "Already a member"}, status=400)
+                return Response({"error": "Already a member"}, status=status.HTTP_400_BAD_REQUEST)
 
             BoardMember.objects.create(
                 user=request.user,
@@ -496,10 +499,10 @@ class InviteUserAcceptAPIView(APIView):
                 action=f"{user.first_name} joined the board "
             )
 
-            return Response({"message": "Successfully joined board"}, status=200)
+            return Response({"message": "Successfully joined board"}, status=status.HTTP_200_OK)
 
         except InviteUser.DoesNotExist:
-            return Response({"error": "Invalid token"}, status=404)
+            return Response({"error": "Invalid token"}, status=status.HTTP_404_NOT_FOUND)
         
         
         
@@ -510,7 +513,7 @@ def move_card(request,pk):
         card = Cards.objects.get(pk=pk)
         
     except Cards.DoesNotExist:
-        return Response({'error':'Card does not exists'}, status=404)
+        return Response({'error':'Card does not exists'}, status=status.HTTP_404_NOT_FOUND)
     
     
     new_position = request.data.get("position")
@@ -521,4 +524,4 @@ def move_card(request,pk):
     
     card.save()
     
-    return Response({'success':'card moved successfully'})
+    return Response({'success':'card moved successfully'}, status=status.HTTP_200_OK)
