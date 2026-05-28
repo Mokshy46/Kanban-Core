@@ -158,7 +158,9 @@ REST_FRAMEWORK = {
         'profile':'5/min',
         'register':'15/hour',
         'invite':'5/minute'
-    }    
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    
 }
 
 

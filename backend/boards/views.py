@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .throttle import InviteThrottle
+from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -398,6 +399,8 @@ class MemberAssignmentAPIView(APIView):
 class ActivityListAPIView(generics.ListAPIView):
     serializer_class = ActivitySerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 8
     
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
