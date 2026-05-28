@@ -15,9 +15,10 @@ class CardsSerializer(serializers.ModelSerializer):
 class BoardMemberSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(source = "user.first_name" , read_only = True)
+    avatar = serializers.ImageField(source = "user.avatar", read_only = True)
     class Meta:
         model = BoardMember
-        fields = ['id', 'user', 'username','board', 'role', 'joined_at']
+        fields = ['id', 'user', 'username','board', 'role', 'joined_at','avatar']
 
 
 class AddBoardMemberSerializer(serializers.ModelSerializer):

@@ -16,6 +16,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from .throttle import InviteThrottle
 
 User = get_user_model()
 
@@ -405,7 +406,7 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
     
     serializer_class = InviteUserSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
-    
+    throttle_classes = [InviteThrottle]
     def perform_create(self,serializer):
         email = serializer.validated_data.get("email")
         role = serializer.validated_data.get("role")

@@ -8,7 +8,7 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 const List = ({ list, board, setLists, }) => {
 
 
-  
+
 
   return (
     <div className="bg-gray-200 p-4 rounded w-64 min-w-[250px]">
