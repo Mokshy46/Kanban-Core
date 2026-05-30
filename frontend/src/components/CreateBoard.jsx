@@ -21,10 +21,10 @@ const CreateBoard = () => {
       setTitle("");
       setSuccess("Board Added");
 
-      setTimeout (()=>{
-      navigate("/boards");
+      setTimeout(() => {
+        navigate("/boards");
 
-      },1000);
+      }, 1000);
 
     } catch (error) {
       console.log("Error:", error.response?.data);
@@ -52,12 +52,16 @@ const CreateBoard = () => {
   return (
 
 
-    <div className="flex flex-col  min-h-screen items-center justify-center  heading">
+    <div className="flex flex-col  min-h-screen items-center justify-center bg-[#FAF9EE] heading">
       {success && (
         <p className=" text-2xl text-green-600">{success} </p>
       )}
-
-      <div className="border rounded-2xl shadow-2xl shadow-gray-400 items-center ">
+        {
+          error &&(
+            <p className=" text-2xl text-red-600">{error}</p>
+          )
+        }
+      <div className=" rounded-2xl shadow-gray-400 items-center bg-white shadow-lg border-2 border-[#A2AF9B] focus:ring-2 focus:ring-[#A2AF9B] focus:border-[#A2AF9B]">
 
 
         <div className=" text-center m-5">
@@ -67,16 +71,12 @@ const CreateBoard = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter board title"
-              className=" rounded-2xl w-full my-7 p-4 "
-            />
-
-
-
-            <button type="submit" className=" bg-black text-white p-3 rounded-2xl w-full h-10 active:scale-95 transition transform duration-150">Create</button>
+              className=" w-full rounded-2xl px-4 py-3 my-2 bg-[#FAF9EE] border-2 border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]" />
+            <button type="submit" className="btn-primary text-black">Create</button>
 
           </form>
 
-          <Link to="/boards"> <button className=" bg-black text-white p-3 rounded-3xl mt-3 h-10 active:scale-95 transition transform duration-150">Go Back</button></Link>
+          <Link to="/boards"> <button className="btn-secondary my-2">Go Back</button></Link>
         </div>
       </div>
     </div>

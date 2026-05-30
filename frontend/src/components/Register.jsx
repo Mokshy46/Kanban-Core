@@ -72,7 +72,7 @@ const Register = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="heading flex items-center justify-center min-h-screen bg-gray-100">
             <div className="rounded-2xl shadow-2xl shadow-gray-400 w-[400px] bg-white m-8">
 
                 <h1 className="text-3xl font-bold text-center p-5">Register</h1>
@@ -86,7 +86,7 @@ const Register = () => {
                             onChange={handleChange}
                             type="email"
                             name="email"
-                            placeholder="Enter your Email"
+                            placeholder=" Enter your Email"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600"
                         />
                     </div>
@@ -98,7 +98,7 @@ const Register = () => {
                             onChange={handleChange}
                             type="text"
                             name="first_name"
-                            placeholder="Enter your Firstname"
+                            placeholder=" Enter your Firstname"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600"
                         />
                     </div>
@@ -112,46 +112,46 @@ const Register = () => {
                             onChange={handleChange}
                             type="text"
                             name="last_name"
-                            placeholder="Enter your Lastname"
+                            placeholder=" Enter your Lastname"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600"
                         />
                     </div>
 
-                    {/* Password */}
+                  
                     <div className="p-3">
                         <label>Password :</label>
                         <input
                             onChange={handleChange}
                             type="password"
                             name="password"
-                            placeholder="Enter your Password"
+                            placeholder=" Enter your Password"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-500"
                         />
                     </div>
 
-                    {/* Confirm Password */}
+                   
                     <div className="p-3">
                         <label>Confirm Password :</label>
                         <input
                             onChange={handleChange}
                             type="password"
                             name="password_2"
-                            placeholder="Confirm your Password"
+                            placeholder=" Confirm your Password"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-500"
                         />
                     </div>
 
-                    {/* Error */}
+                    
                     {error && (
                         <p className="text-red-500 text-sm px-3">{error}</p>
                     )}
 
-                    {/* Success */}
+                    
                     {success && (
                         <p className="text-green-500 text-sm px-3">{success}</p>
                     )}
 
-                    {/* Button */}
+                    
                     <div className="p-3">
                         <button
                             disabled={isLoading}

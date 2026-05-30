@@ -16,41 +16,48 @@ const UandDBoard = ({ board, refreshBoard }) => {
             console.error(err);
         }
     };
-        
-const deleteBoard = async (e) => {
-    e.preventDefault();
-    try {
-        await api.delete(`/api/boards/${board.id}/`)
-        refreshBoard();
 
+    const deleteBoard = async (e) => {
+        e.preventDefault();
+        try {
+            await api.delete(`/api/boards/${board.id}/`)
+            refreshBoard();
+
+        }
+
+        catch (error) {
+            console.log(error);
+        }
     }
 
-    catch (error) {
-        console.log(error);
-    }
-}
+
+    return (
+        <div className=' heading'>
+            {isEditing ? (
+                <>
 
 
-return (
-    <div >
-        {isEditing ? (
-            <>
-                <input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <button onClick={updateBoard}>Save</button>
-                <button onClick={() => setIsEditing(false)}>Cancel</button>
-            </>
-        ) : (
-            <>
-                
-                <button onClick={() => setIsEditing(true)}>Edit</button>
-                <button onClick={deleteBoard}>Delete</button>
-            </>
-        )}
-    </div>
-);
+                    <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <div className=' flex justify-between '>
+                        <button onClick={updateBoard}>Save</button>
+                        <button onClick={() => setIsEditing(false)}>Cancel</button>
+
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className=' flex justify-between '>
+                        <button className=' btn-secondary' onClick={() => setIsEditing(true)}>Edit</button>
+                        <button className='btn-danger' onClick={deleteBoard}>Delete</button>
+
+                    </div>
+                </>
+            )}
+        </div>
+    );
 };
 
 

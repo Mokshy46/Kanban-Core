@@ -107,7 +107,6 @@ class ListsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
         'title':['icontains'],
-        'user__first_name':['icontains']
     }
 
     def get_queryset(self):
@@ -159,7 +158,7 @@ class CardsViewSet(viewsets.ModelViewSet):
     permission_classes = [ permissions.IsAuthenticated, BoardRolePermission]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
-        'title':['icontains']
+        'title':['icontains'],
     }
     def get_queryset(self):
         list_id = self.kwargs.get('list_id')

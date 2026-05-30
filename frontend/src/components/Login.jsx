@@ -40,11 +40,11 @@ const Login = () => {
                 formData
             );
 
-            // store tokens
+            
             localStorage.setItem("access", response.data.access);
             localStorage.setItem("refresh", response.data.refresh);
 
-            console.log("Login success:", response.data);
+            
 
 
         navigate(redirect || "/boards");
@@ -70,7 +70,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className=" heading bg-[#FAF9EE] flex items-center justify-center min-h-screen ">
             <div className="rounded-2xl shadow-2xl shadow-gray-400 w-[400px] bg-white">
 
                 <h1 className="text-3xl font-bold text-center p-5">Login</h1>
@@ -84,7 +84,7 @@ const Login = () => {
                             onChange={handleChange}
                             type="email"
                             name="email"
-                            placeholder="Enter your Email"
+                            placeholder=" Enter your Email"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-600"
                         />
                     </div>
@@ -96,7 +96,7 @@ const Login = () => {
                             onChange={handleChange}
                             type="password"
                             name="password"
-                            placeholder="Enter your Password"
+                            placeholder=" Enter your Password"
                             className="py-2 w-full rounded-lg focus:ring-2 focus:ring-gray-500"
                         />
                     </div>

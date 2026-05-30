@@ -15,7 +15,8 @@ const BoardDetail = () => {
   const [lists, setLists] = useState([]);
   const [board, setBoards] = useState(null);
   const [activities, setActivities] = useState(false);
-
+  const [showActivities, setShowActivities] = useState(false);
+  const [showInvites, setShowInvites] = useState(false);
 
   const fetchLists = async () => {
     try {
@@ -153,21 +154,100 @@ const BoardDetail = () => {
 
   }
   return (
-    <div className="p-5">
+    <div className="p-5 bg-[#FAF9EE] min-h-screen heading">
 
-      <button onClick={() => setActivities(true)} className="font-bold">Show Activity Log</button>
+      <nav className="flex justify-between items-center relative">
 
-      {activities && (
-        <div>
-          <Activities board={board} />
-          <button onClick={() => setActivities(false)} className="font-bold"> Close </button>
+        <h1 className="text-4xl font-bold mb-5">
+          {board ? board.title : "Loading..."}
+        </h1>
+
+        <div className="relative">
+
+          <button
+            onClick={() => setShowActivities(prev => !prev)}
+            className="btn-primary"
+          >
+            Activity Log
+          </button>
+
+          {showActivities && (
+            <div
+              className="
+                    absolute
+                    right-0
+                    mt-2
+                    w-[400px]
+                    max-h-[500px]
+                    overflow-y-auto
+                    bg-white
+                    border
+                    border-[#A2AF9B]
+                    rounded-2xl
+                    shadow-xl
+                    p-4
+                    z-50
+                "
+            >
+
+              <div className="flex justify-between items-center mb-4">
+
+                <h2 className="font-bold text-lg">
+                  Activity Log
+                </h2>
+
+                <button
+                  onClick={() => setShowActivities(false)}
+                  className="text-red-500 font-semibold"
+                >
+                  X
+                </button>
+
+              </div>
+
+              <Activities board={board} />
+
+            </div>
+          )}
+
         </div>
+
+      </nav>
+
+      <div>
+        <button className="btn-primary" onClick={() => setShowInvites(true)}>Invite User</button>
+      </div>
+      {showInvites && (
+        <>
+          <div
+            className="
+                fixed inset-0
+                bg-black/40
+                backdrop-blur-sm
+                z-40"
+            onClick={() => setShowInvites(false)}
+          />
+
+          <div
+            className="fixed inset-0 flex items-center justify-center z-50"
+          >
+            <div
+              className=" bg-white rounded-2xl  p-6  shadow-xl  relative  w-[500px]"
+            >
+              <button
+                onClick={() => setShowInvites(false)}
+                className="absolute top-4 right-4 text-xl font-bold text-red-700"
+              >
+                X
+              </button>
+
+              <InviteUser boardId={id} />
+            </div>
+          </div>
+        </>
       )}
 
-      <InviteUser boardId={id} />
-      <h1 className="text-2xl font-bold mb-5">
-        {board ? board.title : "Loading..."}
-      </h1>
+
       <BoardMembers board={board} />
 
       <DragDropContext onDragEnd={onDragEnd}>

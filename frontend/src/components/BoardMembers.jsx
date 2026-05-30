@@ -1,6 +1,5 @@
 import api from '../api';
 import { useState, useEffect } from 'react';
-import AddBoardMembers from './AddBoardMembers';
 import DeleteBoardMembers from './DeleteBoardMembers';
 
 const BoardMembers = ({ board }) => {
@@ -24,7 +23,6 @@ const BoardMembers = ({ board }) => {
 
     return (
         <div>
-            <AddBoardMembers board={board} refreshMemberLists={fetchBoardMembers} />
 
             {boardMembers.map((boardMember) => (
                 <div className='m-3 flex gap-2' key={boardMember.id}>

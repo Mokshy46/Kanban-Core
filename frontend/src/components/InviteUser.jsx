@@ -7,6 +7,8 @@ const InviteUser = ({ boardId }) => {
     email: "",
     role: "",
   });
+  const [success,setSuccess] = useState("");
+  const [error,setError] = useState("");
 
  
   const handleChange = (e) => {
@@ -24,16 +26,32 @@ const InviteUser = ({ boardId }) => {
         email: "",
         role: "",
       })
+      setSuccess("Email Invite Sent Successfully")
     }
 
     catch (error) {
-      console.log(error.response.data)
+      console.log(error.response?.data);
+
+        setSuccess("");
+
+        if (error.response?.data?.detail) {
+            setError(error.response.data.detail);
+        } else {
+            setError("Failed to send invitation.");
+        }
     }
+    
   }
 
   return (
     <div>
-      <h3>Invite Member</h3>
+      {success &&(
+        <p className=' text-2xl text-green-600 '>{success}</p>
+      )}
+      {error &&(
+        <p className=' text-2xl text-red-600'>{error} </p>
+      )}
+      <h3 className=' text-2xl font-bold '>Invite Member</h3>
 
       <input
         type="email"
@@ -41,15 +59,16 @@ const InviteUser = ({ boardId }) => {
         placeholder="Enter email"
         value={formData.email}
         onChange={handleChange}
+        className='w-full rounded-2xl px-4 py-3 my-2 bg-[#FAF9EE] border-2 border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]'
       />
 
-      <select name='role' value={formData.role} onChange={handleChange}>
+      <select name='role' value={formData.role} onChange={handleChange} className='border-2 border-[#A2AF9B] rounded-2xl'>
         <option value="">Select Role</option>
         <option value="member">Member</option>
         <option value="admin">Admin</option>
       </select>
 
-      <button onClick={sendInvite}>Send Invite</button>
+      <button onClick={sendInvite} className='btn-primary mx-2'>Send Invite</button>
     </div>
   )
 }
