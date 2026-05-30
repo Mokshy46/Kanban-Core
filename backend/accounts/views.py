@@ -22,7 +22,7 @@ class RegistrationApiView(generics.GenericAPIView):
             serialzer.save()
             return Response(serialzer.data, status=status.HTTP_201_CREATED )
         
-        return Response (status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response (status=status.HTTP_400_BAD_REQUEST)
     
 
 class LoginApiView(generics.GenericAPIView):
@@ -50,7 +50,32 @@ class LoginApiView(generics.GenericAPIView):
             {"detail": "Invalid credentials"},
             status=status.HTTP_401_UNAUTHORIZED
         )
-        
+
+
+class LogoutAPIView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            refresh_token = request.data.get("refresh")
+
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(
+                {"message": "Logged out successfully"},
+                status=status.HTTP_200_OK
+            )
+
+        except Exception:
+            return Response(
+                {"error": "Invalid token"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+            
+             
 class UserProfileRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer

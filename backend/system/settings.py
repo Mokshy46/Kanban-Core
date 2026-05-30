@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',  
     'corsheaders',  
     'channels',
+    'rest_framework_simplejwt.token_blacklist',
     ]
 
 MIDDLEWARE = [
@@ -160,6 +161,8 @@ REST_FRAMEWORK = {
         'invite':'5/minute'
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
     
 }
 

@@ -18,6 +18,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .throttle import InviteThrottle
 from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 User = get_user_model()
 
@@ -44,6 +45,10 @@ def create_activity(user, board, action):
 class BoardsListAPIView(generics.ListAPIView):
     serializer_class = BoardsSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    filter_backends =[DjangoFilterBackend]
+    filterset_fields = {
+        'title':['icontains']
+    }
     def get_queryset(self):
         return Boards.objects.filter(
             boardmember__user = self.request.user
@@ -99,6 +104,11 @@ class ListsViewSet(viewsets.ModelViewSet):
     queryset = Lists.objects.all()
     serializer_class = ListDetailsSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'title':['icontains'],
+        'user__first_name':['icontains']
+    }
 
     def get_queryset(self):
         board_id = self.kwargs.get('board_id')
@@ -147,7 +157,10 @@ class CardsViewSet(viewsets.ModelViewSet):
     queryset = Cards.objects.all()
     serializer_class = CardsSerializer
     permission_classes = [ permissions.IsAuthenticated, BoardRolePermission]
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'title':['icontains']
+    }
     def get_queryset(self):
         list_id = self.kwargs.get('list_id')
         
@@ -401,6 +414,11 @@ class ActivityListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     pagination_class = PageNumberPagination
     pagination_class.page_size = 8
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'action':['icontains'],
+        'user__first_name':['icontains'],
+    }
     
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
