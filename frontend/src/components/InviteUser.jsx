@@ -51,7 +51,7 @@ const InviteUser = ({ boardId }) => {
       {error &&(
         <p className=' text-2xl text-red-600'>{error} </p>
       )}
-      <h3 className=' text-2xl font-bold '>Invite Member</h3>
+      <h3 className=' text-2xl font-bold mb-6'>Invite Member</h3>
 
       <input
         type="email"
@@ -59,10 +59,10 @@ const InviteUser = ({ boardId }) => {
         placeholder="Enter email"
         value={formData.email}
         onChange={handleChange}
-        className='w-full rounded-2xl px-4 py-3 my-2 bg-[#FAF9EE] border-2 border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]'
+        className='w-full rounded-2xl px-4 py-3 my-3 bg-[#FAF9EE] border-2 border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]'
       />
 
-      <select name='role' value={formData.role} onChange={handleChange} className='border-2 border-[#A2AF9B] rounded-2xl'>
+      <select name='role' value={formData.role} onChange={handleChange} className='border-2 border-[#A2AF9B] rounded-2xl p-3'>
         <option value="">Select Role</option>
         <option value="member">Member</option>
         <option value="admin">Admin</option>

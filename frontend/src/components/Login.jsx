@@ -71,7 +71,7 @@ const Login = () => {
 
     return (
         <div className=" heading bg-[#FAF9EE] flex items-center justify-center min-h-screen ">
-            <div className="rounded-2xl shadow-2xl shadow-gray-400 w-[400px] bg-white">
+            <div className="rounded-2xl shadow-2xl shadow-gray-400 w-[400px] bg-white mx-6">
 
                 <h1 className="text-3xl font-bold text-center p-5">Login</h1>
 

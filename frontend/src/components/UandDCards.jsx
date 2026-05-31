@@ -119,78 +119,113 @@ const UandDCards = ({ card, setLists, board }) => {
 
   return (
     isEditing ? (
-      <div>
+      <div className="space-y-3">
+
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
+          placeholder="Card title"
+          className="w-full rounded-xl px-4 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"
         />
 
-        <input
-          type="text"
+        <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
+          placeholder="Description"
+          rows={3}
+          className="w-full rounded-xl px-4 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B] resize-none"
         />
 
-        <button onClick={handleUpdate}>Save</button>
-        <button onClick={() => {
-          setFormData({
-            title: card.title,
-            description: card.description
-          });
-          setIsEditing(false)
-        }}>Cancel</button>
-      </div>
+        <div className="flex justify-between gap-2">
+          <button
+            onClick={handleUpdate}
+            className="btn-primary"
+          >
+            Save
+          </button>
 
-    ) :
-      <div className='flex'>
-        <div className='gap-1'>
-          <button onClick={() => setIsEditing(true)}>edit</button>
-          <button onClick={handleDelete}>delete</button>
+          <button
+            onClick={() => {
+              setFormData({
+                title: card.title,
+                description: card.description
+              });
+              setIsEditing(false);
+            }}
+            className="btn-danger"
+          >
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    ) : (
+      <div className="space-y-2">
+
+        <div className="flex justify-between gap-2">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="btn-secondary" >
+            Edit
+          </button>
+
+          <button
+            onClick={handleDelete}
+            className="btn-danger" >
+            Delete
+          </button>
         </div>
 
         {isAssigning ? (
-          <div>
+          <div className="space-y-2">
+
             <select
               value={assignMember}
               onChange={handleAssignChange}
-            >
-
+              className="w-full rounded-xl px-3 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]">
               <option value="">
                 Select Member
               </option>
 
               {boardMembers.map((member) => (
-
                 <option
                   key={member.id}
-                  value={member.user}
-                >
+                  value={member.user} >
                   {member.username}
                 </option>
-
               ))}
-
             </select>
 
-            <button onClick={handleAssign}>Assign</button>
-            <button onClick={() => {
-              setIsAssigning(false);
-              setAssignMember("");
-            }}>
-              Cancel
-            </button>
+            <div className="flex justify-between gap-2">
+              <button
+                onClick={handleAssign}
+                className="btn-primary" >
+                Assign
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsAssigning(false);
+                  setAssignMember("");
+                }}
+                className="btn-danger" >
+                Cancel
+              </button>
+            </div>
+
           </div>
         ) : (
-          <div>
-            <button onClick={() => setIsAssigning(true)}>
-              Assign Member
-            </button>
-          </div>
+          <button
+            onClick={() => setIsAssigning(true)}
+            className="btn-primary w-full">
+            Assign Member
+          </button>
         )}
       </div>
+    )
   )
 }
 

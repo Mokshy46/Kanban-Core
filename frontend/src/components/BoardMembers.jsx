@@ -22,7 +22,7 @@ const BoardMembers = ({ board }) => {
     }, [board?.id])
 
     return (
-        <div>
+        <div className=''>
 
             {boardMembers.map((boardMember) => (
                 <div className='m-3 flex gap-2' key={boardMember.id}>
@@ -33,12 +33,12 @@ const BoardMembers = ({ board }) => {
                             className='w-8 h-8 rounded-full object-cover'
                         />
                     )}
-                    <p className=' font-bold'>
+                    <p className=' font-bold '>
 
                         {boardMember.username}
 
                     </p>
-                    <p className='font-semibold'>{boardMember.role} </p>
+                    <p className='text-gray-600'>{boardMember.role} </p>
 
                     <DeleteBoardMembers
                         board={board}

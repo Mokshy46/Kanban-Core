@@ -61,7 +61,7 @@ const CreateBoard = () => {
             <p className=" text-2xl text-red-600">{error}</p>
           )
         }
-      <div className=" rounded-2xl shadow-gray-400 items-center bg-white shadow-lg border-2 border-[#A2AF9B] focus:ring-2 focus:ring-[#A2AF9B] focus:border-[#A2AF9B]">
+      <div className=" m-4 rounded-2xl shadow-gray-400 items-center bg-white shadow-lg border-2 border-[#A2AF9B] focus:ring-2 focus:ring-[#A2AF9B] focus:border-[#A2AF9B]">
 
 
         <div className=" text-center m-5">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -72,7 +72,7 @@ const Register = () => {
     };
 
     return (
-        <div className="heading flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="heading flex items-center justify-center min-h-screen bg-[#FAF9EE]">
             <div className="rounded-2xl shadow-2xl shadow-gray-400 w-[400px] bg-white m-8">
 
                 <h1 className="text-3xl font-bold text-center p-5">Register</h1>
@@ -117,7 +117,7 @@ const Register = () => {
                         />
                     </div>
 
-                  
+
                     <div className="p-3">
                         <label>Password :</label>
                         <input
@@ -129,7 +129,7 @@ const Register = () => {
                         />
                     </div>
 
-                   
+
                     <div className="p-3">
                         <label>Confirm Password :</label>
                         <input
@@ -141,17 +141,17 @@ const Register = () => {
                         />
                     </div>
 
-                    
+
                     {error && (
                         <p className="text-red-500 text-sm px-3">{error}</p>
                     )}
 
-                    
+
                     {success && (
                         <p className="text-green-500 text-sm px-3">{success}</p>
                     )}
 
-                    
+
                     <div className="p-3">
                         <button
                             disabled={isLoading}

@@ -22,39 +22,59 @@ const CreateLists = ({ boardId, setLists }) => {
             setLists((prev) => [...prev, response.data]);
             setTitle("");
             setIsAdding(false);
-
-
-
         }
         catch (error) {
             console.log(error);
-            setError("Failed to create list");
+            setError("A list title is required.");
 
 
         }
     };
 
     return isAdding ? (
-        <div className="bg-gray-800 p-3 rounded w-64">
+
+        <div className="bg-white border-2 border-[#A2AF9B] rounded-2xl shadow-lg p-4 w-[280px] md:w-[320px] shrink-0">
+
+            {error && (
+                <p className="mb-3 text-sm font-medium text-red-600">{error} </p>
+            )}
             <input
-                className="w-full p-2 mb-2"
+                className="w-full rounded-xl px-4 py-3 mb-3 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"
                 placeholder="Enter list title..."
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                    setTitle(e.target.value);
+                    setError("");
+                }}
                 autoFocus
             />
 
-            <button onClick={handleSubmit} className="bg-blue-500 px-3 py-1 mr-2">
-                Add List
-            </button>
-            <button onClick={() => setIsAdding(false)}>Cancel</button>
+            <div className="flex justify-between gap-2">
+                <button
+                    onClick={handleSubmit}
+                    className="btn-primary"
+                >
+                    Add List
+                </button>
+
+                <button
+                    onClick={() => {
+                        setIsAdding(false);
+                        setError("");
+                        setTitle("");
+                    }}
+                    className="btn-danger"
+                >
+                    Cancel
+                </button>
+            </div>
         </div>
     ) : (
         <button
             onClick={() => setIsAdding(true)}
-            className="bg-gray-700 p-3 rounded w-64 text-left"
+            className="bg-white border-2 border-dashed border-[#A2AF9B] rounded-2xl shadow-md p-4 w-[280px] md:w-[320px] shrink-0 text-left font-semibold hover:bg-[#FAF9EE] transition"
         >
-            + Add another list
+            + Add list
         </button>
     );
 };

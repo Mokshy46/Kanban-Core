@@ -12,8 +12,6 @@ const AssignedMembers = ({ card }) => {
             const response = await api.get(`/api/cards/${card.id}/assign/`);
             setMembers(response.data)
 
-            console.log(response.data)
-
         }
         catch (error) {
             console.log(error)
@@ -25,11 +23,8 @@ const AssignedMembers = ({ card }) => {
         try {
 
             await api.delete(`/api/cards/${card.id}/assign/`,
-                {
-                    data: { user_id: memberId }
-                }
+                { data: { user_id: memberId } }
             );
-
             setMembers((prev) =>
                 prev.filter((member) => member.id !== memberId)
             );
@@ -51,27 +46,46 @@ const AssignedMembers = ({ card }) => {
 
     return (
         show ? (
+            <div className="bg-white border border-[#A2AF9B] rounded-2xl shadow-lg p-4 mt-2">
 
-            <div>
-                {members.map((member) => (
-                    <div key={member.id}>
-                        <p className='p-2'>
-                            {member.username}
-                        </p>
-                        <button
-                            onClick={() => handleUnassign(member.id)}
+                <h3 className="font-bold text-lg mb-3">
+                    Assigned Members
+                </h3>
+
+                <div className="space-y-2">
+                    {members.map((member) => (
+                        <div
+                            key={member.id}
+                            className="flex justify-between items-center bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3"
                         >
-                            Unassign
-                        </button>
-                    </div>
-                ))}
-                <button onClick={() => setshow(false)}>close</button>
-            </div>
-        ) :
-            (
-                <button onClick={() => setshow(true)}> show members assigned</button>
-            )
+                            <p className="font-medium break-words">
+                                {member.username}
+                            </p>
 
+                            <button
+                                onClick={() => handleUnassign(member.id)}
+                                className="btn-danger"
+                            >
+                                Unassign
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    onClick={() => setshow(false)}
+                    className="btn-secondary mt-4 w-full" >
+                    Close
+                </button>
+            </div>
+        ) : (
+            <button
+                onClick={() => setshow(true)}
+                className="btn-primary w-full"
+            >
+                Show Assigned Members
+            </button>
+        )
     )
 }
 

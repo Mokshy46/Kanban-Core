@@ -7,7 +7,7 @@ const UandDList = ({ list, refreshList }) => {
     const [title, setTitle] = useState(list.title);
 
 
-    const handleChange =  (e) => {
+    const handleChange = (e) => {
         setTitle(e.target.value)
 
     }
@@ -33,35 +33,44 @@ const UandDList = ({ list, refreshList }) => {
     const handleDelete = async (e) => {
         e.preventDefault()
 
-        try{
-        await api.delete(`/api/lists/${list.id}/`)
+        try {
+            await api.delete(`/api/lists/${list.id}/`)
 
-        refreshList();
+            refreshList();
         }
 
-        catch(error){
+        catch (error) {
             console.log(error)
         }
-        
+
     }
 
     return (
         isEditing ? (
-            <div>
+            <div className="space-y-3">
                 <input
                     type="text"
                     value={title}
                     onChange={handleChange}
-                />
-                <button onClick={handleUpdate}>save</button>
-                <button onClick={() => setIsEditing(false)}>cancel</button>
-            </div>
+                    className="w-full rounded-xl px-4 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"/>
 
-        ) :
-            <div>
-                <button onClick={() => setIsEditing(true)}>edit</button>
-                <button onClick={handleDelete}>delete</button>
+                <div className="flex justify-between gap-2">
+                    <button onClick={handleUpdate} className="btn-primary">
+                        Save
+                    </button>
+
+                    <button onClick={() => setIsEditing(false)} className="btn-danger">
+                        Cancel
+                    </button>
+                </div>
             </div>
+        ) : (
+            <div className="flex justify-between gap-2">
+                <button onClick={() => setIsEditing(true)} className="btn-secondary">Edit</button>
+
+                <button onClick={handleDelete} className="btn-danger"> Delete</button>
+            </div>
+        )
 
 
     )
