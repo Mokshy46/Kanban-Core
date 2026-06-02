@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import api from '../api'
+import { CiMenuKebab } from "react-icons/ci";
 
 const UandDCards = ({ card, setLists, board }) => {
 
   const [isEditing, setIsEditing] = useState(false)
   const [boardMembers, setBoardMembers] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
   const [formData, setFormData] = useState(
     {
       title: card.title,
@@ -163,37 +165,68 @@ const UandDCards = ({ card, setLists, board }) => {
 
       </div>
     ) : (
-      <div className="space-y-2">
+      <div className="relative">
 
-        <div className="flex justify-between gap-2">
+        <div className="flex justify-end">
           <button
-            onClick={() => setIsEditing(true)}
-            className="btn-secondary" >
-            Edit
-          </button>
-
-          <button
-            onClick={handleDelete}
-            className="btn-danger" >
-            Delete
+            onClick={() => setShowMenu(!showMenu)}
+            className="text-2xl font-bold px-2 py-1 rounded-lg hover:bg-[#FAF9EE]"
+          >
+            <CiMenuKebab className='text-xl'/>
           </button>
         </div>
 
-        {isAssigning ? (
-          <div className="space-y-2">
+        {showMenu && (
+          <div className="absolute right-0 top-10 w-40 bg-white border border-[#A2AF9B] rounded-xl shadow-lg z-50">
+
+            <button
+              onClick={() => {
+                setIsEditing(true);
+                setShowMenu(false);
+              }}
+              className="block w-full text-left px-4 py-2 hover:bg-[#FAF9EE]"
+            >
+              Edit
+            </button>
+
+            <button
+              onClick={() => {
+                setIsAssigning(true);
+                setShowMenu(false);
+              }}
+              className="block w-full text-left px-4 py-2 hover:bg-[#FAF9EE]"
+            >
+              Assign Member
+            </button>
+
+            <button
+              onClick={() => {
+                handleDelete();
+                setShowMenu(false);
+              }}
+              className="block w-full text-left px-4 py-2 text-red-500 hover:bg-[#FAF9EE]"
+            >
+              Delete
+            </button>
+
+          </div>
+        )}
+
+        {isAssigning && (
+          <div className="space-y-2 mt-2">
 
             <select
               value={assignMember}
               onChange={handleAssignChange}
-              className="w-full rounded-xl px-3 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]">
-              <option value="">
-                Select Member
-              </option>
+              className="w-full rounded-xl px-3 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"
+            >
+              <option value="">Select Member</option>
 
               {boardMembers.map((member) => (
                 <option
                   key={member.id}
-                  value={member.user} >
+                  value={member.user}
+                >
                   {member.username}
                 </option>
               ))}
@@ -202,7 +235,8 @@ const UandDCards = ({ card, setLists, board }) => {
             <div className="flex justify-between gap-2">
               <button
                 onClick={handleAssign}
-                className="btn-primary" >
+                className="btn-primary"
+              >
                 Assign
               </button>
 
@@ -211,19 +245,15 @@ const UandDCards = ({ card, setLists, board }) => {
                   setIsAssigning(false);
                   setAssignMember("");
                 }}
-                className="btn-danger" >
+                className="btn-danger"
+              >
                 Cancel
               </button>
             </div>
 
           </div>
-        ) : (
-          <button
-            onClick={() => setIsAssigning(true)}
-            className="btn-primary w-full">
-            Assign Member
-          </button>
         )}
+
       </div>
     )
   )

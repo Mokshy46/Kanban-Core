@@ -1,11 +1,12 @@
 import api from '../api'
 import { useState } from 'react'
+import { CiMenuKebab } from "react-icons/ci";
 
 const UandDList = ({ list, refreshList }) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(list.title);
-
+    const [showMenu, setShowMenu] = useState(false);
 
     const handleChange = (e) => {
         setTitle(e.target.value)
@@ -52,7 +53,7 @@ const UandDList = ({ list, refreshList }) => {
                     type="text"
                     value={title}
                     onChange={handleChange}
-                    className="w-full rounded-xl px-4 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"/>
+                    className="w-full rounded-xl px-4 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]" />
 
                 <div className="flex justify-between gap-2">
                     <button onClick={handleUpdate} className="btn-primary">
@@ -65,10 +66,37 @@ const UandDList = ({ list, refreshList }) => {
                 </div>
             </div>
         ) : (
-            <div className="flex justify-between gap-2">
-                <button onClick={() => setIsEditing(true)} className="btn-secondary">Edit</button>
+            <div className="relative">
+                <button
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="text-2xl font-bold px-2 hover:bg-[#FAF9EE] rounded-lg"
+                >
+                    <CiMenuKebab />
 
-                <button onClick={handleDelete} className="btn-danger"> Delete</button>
+                </button>
+
+                {showMenu && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-[#A2AF9B] rounded-xl shadow-lg z-50">
+
+                        <button
+                            onClick={() => {
+                                setIsEditing(true);
+                                setShowMenu(false);
+                            }}
+                            className="block w-full text-left px-4 py-2 hover:bg-[#FAF9EE] rounded-t-xl"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            onClick={handleDelete}
+                            className="block w-full text-left px-4 py-2 text-red-500 hover:bg-[#FAF9EE] rounded-b-xl"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+                )}
             </div>
         )
 
