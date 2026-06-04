@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate,useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
 
@@ -50,7 +51,7 @@ const Login = () => {
         navigate(redirect || "/boards");
 
         } catch (error) {
-            console.log("Error during Login", error.response?.data);
+            toast.error("Error during Login")
 
             if (error.response?.data) {
                 const data = error.response.data;
@@ -59,10 +60,10 @@ const Login = () => {
                     setError(data.detail);
                 } else {
                     const firstKey = Object.keys(data)[0];
-                    setError(data[firstKey]?.[0] || "Login failed");
+                    toast.error("Login Failed")
                 }
             } else {
-                setError("Server error");
+               toast.error("Login Error")
             }
         }
 

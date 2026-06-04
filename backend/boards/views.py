@@ -248,7 +248,7 @@ class AddBoardMembersAPIView(generics.CreateAPIView):
         create_activity(
             user=self.request.user,
             board=board,
-            action=f"{user.first_name} added to the board"
+            action=f"added {user.first_name} to the board"
         )
 
 class BoardMemberRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -316,7 +316,7 @@ class BoardMemberDestroyAPIView(generics.DestroyAPIView):
         create_activity(
             user=self.request.user,
             board = instance.board,
-            action=f"{instance.user.first_name} deleted from the board"
+            action=f"deleted {instance.user.first_name} from the board"
         )              
         self.perform_destroy(instance=instance)     
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -370,7 +370,7 @@ class MemberAssignmentAPIView(APIView):
         create_activity(
             user=self.request.user,
             board=card.list.board,
-            action= f"{user.first_name} assigned to the card"
+            action= f"assigned {user.first_name} to the card"
         )
         return Response({
             "message": "Assigned to card successfully"
@@ -401,7 +401,7 @@ class MemberAssignmentAPIView(APIView):
         create_activity(
             user=self.request.user,
             board=card.list.board,
-            action=f"{user.first_name} unassigned from the card"
+            action=f"unassigned {user.first_name} from the card"
         )
 
         return Response({
@@ -446,15 +446,21 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
 
 
         message = f"""
-        You've been invited to join a board.
+ 
+            You've been invited to join a board on Kanban.
 
-        Board: {board.title}
-        Role: {invite.role}
+            Invited by: {board.owner.first_name} {board.owner.last_name}
+            Board: {board.title}
+            Role: {invite.role}
 
-        Click here to join:
-        {link}
+            Click the link below to accept your invitation:
+
+            {link}
+
+            If you weren't expecting this invitation, you can safely ignore this email.
+
         """
-
+        
         send_mail(
             "Board Invitation",
             message,
@@ -516,7 +522,7 @@ class InviteUserAcceptAPIView(APIView):
             create_activity(
                 user = invite.invited_by,
                 board=invite.board,
-                action=f"{user.first_name} joined the board "
+                action=f" added {user.first_name} to the board "
             )
 
             return Response({"message": "Successfully joined board"}, status=status.HTTP_200_OK)

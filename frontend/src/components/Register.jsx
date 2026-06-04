@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -43,9 +44,9 @@ const Register = () => {
                 formData
             );
 
-            console.log("Registration success:", response.data);
+            
 
-            setSuccess("Account created successfully");
+            toast.success("Account created successfully")
 
             setTimeout(() => {
                 window.location.href = "/";
@@ -64,7 +65,7 @@ const Register = () => {
                     setError(data[firstKey]?.[0] || "Registration failed");
                 }
             } else {
-                setError("Server error");
+                toast.error("Server Error")
             }
         }
 
