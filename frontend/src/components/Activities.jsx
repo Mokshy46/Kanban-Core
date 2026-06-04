@@ -69,10 +69,19 @@ const Activities = ({ board }) => {
     }, [board?.id])
 
     return (
-        <div>
+        <div className="space-y-2">
             {activities.results.map((activity) => (
-                <div className='font-semibold m-2' key={activity.id}>
-                    <span>{activity.username} </span>{activity.action}
+                <div
+                    key={activity.id}
+                    className="bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3 shadow-sm"
+                >
+                    <span className="font-bold text-[#556052]">
+                        {activity.username}
+                    </span>
+
+                    <span className="ml-1 text-gray-700">
+                        {activity.action}
+                    </span>
                 </div>
             ))}
         </div>

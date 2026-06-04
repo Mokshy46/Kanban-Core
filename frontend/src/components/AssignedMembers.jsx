@@ -6,7 +6,7 @@ const AssignedMembers = ({ card }) => {
     const [show, setshow] = useState(false);
     const [members, setMembers] = useState([]);
 
-    const fetchMembers = async (e) => {
+    const fetchMembers = async () => {
 
         try {
             const response = await api.get(`/api/cards/${card.id}/assign/`);
@@ -38,54 +38,39 @@ const AssignedMembers = ({ card }) => {
 
     useEffect(() => {
 
-        if (show && card?.id) {
+        if (card?.id) {
             fetchMembers();
         }
 
-    }, [show, card?.id]);
+    }, [card?.id]);
 
     return (
-        show ? (
-            <div className="bg-white border border-[#A2AF9B] rounded-2xl shadow-lg p-4 mt-2">
 
-                <h3 className="font-bold text-lg mb-3">
-                    Assigned Members
-                </h3>
-
-                <div className="space-y-2">
+        <div className="mt-2">
+            {members.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
                     {members.map((member) => (
                         <div
                             key={member.id}
-                            className="flex justify-between items-center bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3"
+                            className="flex items-center gap-1 px-2 py-1 bg-[#A2AF9B] text-white rounded-full text-sm"
                         >
-                            <p className="font-medium break-words">
-                                {member.username}
-                            </p>
+                            <span>{member.username}</span>
 
                             <button
                                 onClick={() => handleUnassign(member.id)}
-                                className="btn-danger"
+                                className="font-bold hover:text-red-200 transition"
                             >
-                                Unassign
+                                x
                             </button>
                         </div>
                     ))}
                 </div>
-
-                <button
-                    onClick={() => setshow(false)}
-                    className="btn-secondary mt-4 w-full" >
-                    Close
-                </button>
-            </div>
-        ) : (
-            <button
-                onClick={() => setshow(true)}
-                className="btn-primary w-full"
-            >
-                Show Assigned Members
-            </button>
-        )
+            ) : (
+                <p className="text-sm text-gray-500 italic">
+                    No members assigned yet
+                </p>
+            )}
+        </div>
     )
 }
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import api from '../api'
 import { CiMenuKebab } from "react-icons/ci";
 
-const UandDCards = ({ card, setLists, board }) => {
+const UandDCards = ({ card, setLists, board}) => {
 
   const [isEditing, setIsEditing] = useState(false)
   const [boardMembers, setBoardMembers] = useState([]);

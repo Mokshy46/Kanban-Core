@@ -22,34 +22,50 @@ const BoardMembers = ({ board }) => {
     }, [board?.id])
 
     return (
-        <div className=''>
+        <div className="space-y-3">
 
             {boardMembers.map((boardMember) => (
-                <div className='m-3 flex gap-2' key={boardMember.id}>
+                <div
+                    key={boardMember.id}
+                    className="flex items-center justify-between bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3 shadow-sm"
+                >
 
-                    {boardMember.avatar && (
-                        <img
-                            src={boardMember.avatar}
-                            className='w-8 h-8 rounded-full object-cover'
-                        />
-                    )}
-                    <p className=' font-bold '>
+                    <div className="flex items-center gap-3">
 
-                        {boardMember.username}
+                        {boardMember.avatar ? (
+                            <img
+                                src={boardMember.avatar}
+                                alt={boardMember.username}
+                                className="w-10 h-10 rounded-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-10 h-10 rounded-full bg-[#A2AF9B] flex items-center justify-center text-white font-bold">
+                                {boardMember.username[0].toUpperCase()}
+                            </div>
+                        )}
 
-                    </p>
-                    <p className='text-gray-600'>{boardMember.role} </p>
+                        <div>
+                            <p className="font-bold break-words">
+                                {boardMember.username}
+                            </p>
+
+                            <p className="text-sm text-gray-600 capitalize">
+                                {boardMember.role}
+                            </p>
+                        </div>
+
+                    </div>
 
                     <DeleteBoardMembers
                         board={board}
                         refreshBoardMembersList={fetchBoardMembers}
                         userId={boardMember.user}
-                        boardMember={boardMember.role}
+                        boardMember={boardMember.role} />
+               
 
-                    />
                 </div>
-
             ))}
+
         </div>
     )
 }

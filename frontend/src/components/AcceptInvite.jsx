@@ -64,13 +64,47 @@ const AcceptInvite = () => {
     if (!data) return <p>Loading...</p>;
 
     return (
-        <div>
+        <div className="min-h-screen bg-[#FAF9EE] flex items-center justify-center p-4">
 
-            <h2>Join Board</h2>
-            <p>Board: {data.board}</p>
-            <p>Role: {data.role}</p>
+            <div className="bg-white border-2 border-[#A2AF9B] rounded-2xl shadow-lg p-6 w-full max-w-md">
 
-            <button onClick={acceptInvite}>Accept Invite</button>
+                <h2 className="text-3xl font-bold text-center mb-6">
+                    Join Board
+                </h2>
+
+                <div className="space-y-3 mb-6">
+
+                    <div className="bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3">
+                        <p className="text-sm text-gray-500">
+                            Board
+                        </p>
+
+                        <p className="font-semibold">
+                            {data.board}
+                        </p>
+                    </div>
+
+                    <div className="bg-[#FAF9EE] border border-[#A2AF9B] rounded-xl p-3">
+                        <p className="text-sm text-gray-500">
+                            Role
+                        </p>
+
+                        <p className="font-semibold capitalize">
+                            {data.role}
+                        </p>
+                    </div>
+
+                </div>
+
+                <button
+                    onClick={acceptInvite}
+                    className="btn-primary w-full"
+                >
+                    Accept Invitation
+                </button>
+
+            </div>
+
         </div>
     );
 }

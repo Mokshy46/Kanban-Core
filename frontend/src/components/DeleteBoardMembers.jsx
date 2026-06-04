@@ -5,6 +5,7 @@ const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMembe
 
     const [role, setRole] = useState(boardMember.role);
     const [isEditing, setIsEditing] = useState(false);
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -22,10 +23,11 @@ const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMembe
 
             setRole("");
             refreshBoardMembersList();
+            setError("")
         }
 
         catch (error) {
-            console.log(error)
+            setError("You do not have permission to change this member's role");
         }
 
     }
@@ -36,42 +38,74 @@ const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMembe
         try {
             await api.delete(`/api/boards/${board.id}/remove_member/${userId}/`)
             refreshBoardMembersList();
+            setError("")
         }
 
         catch (error) {
-            console.log(error)
+            setError("You do not have permission to remove this member");
         }
+
 
     }
     return (
         <div>
-            {isEditing ?
-                (
-                    <div>
+            {error && (
+                <p className="text-red-500 text-sm">
+                    {error}
+                </p>
+            )}
+            {isEditing ? (
+                <form onSubmit={handleUpdate} className="space-y-3">
 
-                        <form onSubmit={handleUpdate}>
-                            <select value={role} onChange={handleChange}>
-                                <option value="member">Member</option>
-                                <option value="admin">Admin</option>
-                                <option value="owner">Owner</option>
+                    <select
+                        value={role}
+                        onChange={handleChange}
+                        className="w-full rounded-xl px-3 py-2 bg-[#FAF9EE] border border-[#A2AF9B] focus:outline-none focus:ring-2 focus:ring-[#A2AF9B]"
+                    >
+                        <option value="member">Member</option>
+                        <option value="admin">Admin</option>
+                        <option value="owner">Owner</option>
+                    </select>
 
-                            </select>
-                            <button onClick={handleUpdate}>save</button>
-                            <button type="button" onClick={() => setIsEditing(false)}> cancel</button>
-                        </form>
+                    <div className="flex justify-between gap-2">
 
-
-                    </div>)
-                :
-                (
-                    <div>
-                        <button onClick={() => setIsEditing(true)}>Edit</button>
-                        <button onClick={handleDelete} className="bg-blue-500 px-3 py-1 mr-2">
-                            Delete Member
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                        >
+                            Save
                         </button>
-                    </div>
-                )}
 
+                        <button
+                            type="button"
+                            onClick={() => setIsEditing(false)}
+                            className="btn-danger"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+            ) : (
+                <div className="flex gap-2">
+
+                    <button
+                        onClick={() => setIsEditing(true)}
+                        className="btn-secondary"
+                    >
+                        Edit Role
+                    </button>
+
+                    <button
+                        onClick={handleDelete}
+                        className="btn-danger"
+                    >
+                        Remove
+                    </button>
+
+                </div>
+            )}
         </div>
     )
 }

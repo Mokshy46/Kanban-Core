@@ -8,7 +8,12 @@ import UandDList from "./UandDList";
 const List = ({ list, board, setLists, refreshList }) => {
 
 
+  const [members, setMembers] = useState([]);
 
+  const fetchMembers = async () => {
+    const res = await api.get(`/api/cards/${card.id}/assign/`);
+    setMembers(res.data);
+  };
 
   return (
     <div className="bg-white border-2 border-[#A2AF9B] rounded-2xl shadow-lg p-4 w-[280px] md:w-[320px] shrink-0">
@@ -35,12 +40,12 @@ const List = ({ list, board, setLists, refreshList }) => {
                     {card.title}
                   </h>
                   <div>
-                    <UandDCards card={card} board={board} setLists={setLists} />
+                    <UandDCards card={card} board={board} setLists={setLists} fetchMembers={fetchMembers} />
 
                   </div>
                 </div>
 
-                <AssignedMembers card={card} />
+                <AssignedMembers card={card} members={members} setMembers={setMembers} />
               </div>
             )}
 

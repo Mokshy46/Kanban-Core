@@ -11,7 +11,7 @@ import { IoMdPerson } from "react-icons/io";
 import { IoMdPersonAdd } from "react-icons/io";
 import { RxActivityLog } from "react-icons/rx";
 import { HiMenu } from "react-icons/hi";
-
+import { Link } from "react-router-dom";
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -153,11 +153,21 @@ const BoardDetail = () => {
   return (
     <div className="p-5 heading min-h-screen bg-[#FAF9EE] w-full">
 
-      <nav className="flex justify-between md:flex-row md:justify-between gap-4 relative">
+      <nav className="flex justify-between md:flex-row md:justify-between gap-4 relative m-3">
 
-        <h1 className="text-2xl md:text-4xl font-bold mb-5 break-words">
-          {board ? board.title : "Loading..."}
-        </h1>
+        <div className="flex items-center gap-3">
+
+          <Link
+            to="/boards"
+            className="btn-secondary">
+            ← Boards
+          </Link>
+
+          <h1 className="text-2xl md:text-3xl font-bold break-words">
+            {board ? board.title : "Loading..."}
+          </h1>
+
+        </div>
 
         {/* HAMBURGER */}
         <div className="relative md:hidden">

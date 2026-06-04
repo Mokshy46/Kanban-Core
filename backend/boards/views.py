@@ -543,5 +543,5 @@ def move_card(request,pk):
     card.position = new_position
     
     card.save()
-    
+
     return Response({'success':'card moved successfully'}, status=status.HTTP_200_OK)

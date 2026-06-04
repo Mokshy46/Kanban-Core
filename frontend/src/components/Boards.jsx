@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import UandDBoard from "./UandDBoard";
 import LogoutButton from "./Logout";
+import { VscAccount } from "react-icons/vsc";
 
 const Boards = () => {
   const [boards, setBoards] = useState([]);
@@ -24,19 +25,31 @@ const Boards = () => {
 
   return (
     <div className=" heading min-h-screen bg-[#FAF9EE] w-full">
-      <div className="justify-between flex gap-2 mx-3  items-center">
+      <div className="justify-between flex gap-2 mx-3 items-center">
 
-        <div className="my-3"><LogoutButton /></div>
+        <div className="flex items-center gap-2 my-3">
 
-        <div>
-          <h1 className=" text-center text-3xl md:text-5xl font-bold my-6">Boards</h1>
+          <Link
+            to="/profile"
+            className="btn-secondary inline-flex gap-1">
+           <VscAccount className=" font-bold text-2xl"/> 
+           <h1>Profile</h1>
+          </Link>
+
+          <LogoutButton />
+
         </div>
+
+        <h1 className="text-center text-3xl md:text-5xl font-bold my-6">
+          Boards
+        </h1>
 
         <Link
           to="/create"
-          className=" btn-primary text-white shrink-0 p-2 px-3 rounded-3xl mt-3 h-10 active:scale-95 transition transform duration-150">
+          className="btn-primary text-white shrink-0 p-2 px-3 rounded-3xl mt-3 h-10 active:scale-95 transition transform duration-150" >
           ADD +
         </Link>
+
       </div>
 
 
