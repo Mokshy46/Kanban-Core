@@ -97,7 +97,7 @@ ASGI_APPLICATION = 'system.asgi.application'
 
 DATABASES = {
     "default": dj_database_url.parse(
-        config("DATABASE_PUBLIC_URL")
+        config("DATABASE_URL")
     )
 }
 
