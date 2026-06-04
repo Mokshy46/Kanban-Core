@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import api from '../api';
+import { toast } from 'react-toastify';
 
 const InviteUser = ({ boardId }) => {
 
@@ -7,8 +8,7 @@ const InviteUser = ({ boardId }) => {
     email: "",
     role: "",
   });
-  const [success,setSuccess] = useState("");
-  const [error,setError] = useState("");
+
 
  
   const handleChange = (e) => {
@@ -26,7 +26,7 @@ const InviteUser = ({ boardId }) => {
         email: "",
         role: "",
       })
-      setSuccess("Email Invite Sent Successfully")
+      toast.success("Email Invite Sent Successfully")
     }
 
     catch (error) {
@@ -37,7 +37,7 @@ const InviteUser = ({ boardId }) => {
         if (error.response?.data?.detail) {
             setError(error.response.data.detail);
         } else {
-            setError("Failed to send invitation.");
+            toast.error("Failed to send invitation")
         }
     }
     
@@ -45,12 +45,7 @@ const InviteUser = ({ boardId }) => {
 
   return (
     <div>
-      {success &&(
-        <p className=' text-2xl text-green-600 '>{success}</p>
-      )}
-      {error &&(
-        <p className=' text-2xl text-red-600'>{error} </p>
-      )}
+     
       <h3 className=' text-2xl font-bold mb-6'>Invite Member</h3>
 
       <input

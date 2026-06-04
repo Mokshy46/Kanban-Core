@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import api from '../api'
+import { toast } from 'react-toastify';
 
 const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMember }) => {
 
@@ -23,11 +24,11 @@ const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMembe
 
             setRole("");
             refreshBoardMembersList();
-            setError("")
+            toast.success("Role updated successfully")
         }
 
         catch (error) {
-            setError("You do not have permission to change this member's role");
+            toast.error("You do not have permission to change this member's role")
         }
 
     }
@@ -38,11 +39,11 @@ const DeleteBoardMembers = ({ board, userId, refreshBoardMembersList, boardMembe
         try {
             await api.delete(`/api/boards/${board.id}/remove_member/${userId}/`)
             refreshBoardMembersList();
-            setError("")
+            toast.success("Member deleted successfully")
         }
 
         catch (error) {
-            setError("You do not have permission to remove this member");
+            toast.error("You do not have permission to remove this member")
         }
 
 

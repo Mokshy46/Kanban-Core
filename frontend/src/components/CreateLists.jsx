@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import api from "../api";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const CreateLists = ({ boardId, setLists }) => {
     const [title, setTitle] = useState("")
@@ -21,11 +22,12 @@ const CreateLists = ({ boardId, setLists }) => {
 
             setLists((prev) => [...prev, response.data]);
             setTitle("");
+            toast.success("List Created Successfully")
             setIsAdding(false);
         }
         catch (error) {
             console.log(error);
-            setError("A list title is required.");
+            toast.error("A list title is required")
 
 
         }

@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import api from '../api'
 import { CiMenuKebab } from "react-icons/ci";
+import { toast } from 'react-toastify';
 
 const UandDCards = ({ card, setLists, board}) => {
 
@@ -93,10 +94,11 @@ const UandDCards = ({ card, setLists, board}) => {
       );
       setAssignMember("");
       setIsAssigning(false);
+      toast.success("Card Updated")
     }
 
     catch (error) {
-      console.log(error)
+      toast.error("You are not allowed to update")
     }
   }
 
@@ -113,9 +115,10 @@ const UandDCards = ({ card, setLists, board}) => {
 
     try {
       await api.delete(`/api/cards/${card.id}/`);
+      toast.success("Deleted Successfully")
     }
     catch (error) {
-      console.log(error);
+      toast.error("You are not allowed to delete")
     }
   };
 

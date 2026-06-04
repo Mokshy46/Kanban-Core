@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../api";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CreateBoard = () => {
   const navigate = useNavigate();
@@ -19,15 +20,14 @@ const CreateBoard = () => {
 
       console.log("Created:", res.data);
       setTitle("");
-      setSuccess("Board Added");
-
+      toast.success("Board Created Successfully")
       setTimeout(() => {
         navigate("/boards");
 
       }, 1000);
 
     } catch (error) {
-      console.log("Error:", error.response?.data);
+      
 
       if (error.response?.data) {
         const data = error.response.data;
@@ -40,7 +40,7 @@ const CreateBoard = () => {
         }
         else {
           const firstKey = Object.keys(data)[0];
-          setError(data[firstKey]?.[0] || "Something went wrong");
+          toast.error("Something Went Wrong")
         }
 
       } else {

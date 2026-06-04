@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import api from '../api';
+import { toast } from 'react-toastify';
 
 const UandDBoard = ({ board, refreshBoard }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -12,8 +13,9 @@ const UandDBoard = ({ board, refreshBoard }) => {
             await api.patch(`/api/boards/${board.id}/`, { title });
             setIsEditing(false);
             refreshBoard();
+            toast.success("Board Updated Successfully")
         } catch (err) {
-            console.error(err);
+           toast.error("You are not allowed to update")
         }
     };
 
@@ -22,11 +24,11 @@ const UandDBoard = ({ board, refreshBoard }) => {
         try {
             await api.delete(`/api/boards/${board.id}/`)
             refreshBoard();
-
+            toast.success("Deleted Successfully")
         }
 
         catch (error) {
-            console.log(error);
+            toast.error("You are not allowed to delete")
         }
     }
 

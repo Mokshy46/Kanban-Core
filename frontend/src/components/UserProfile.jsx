@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import api from '../api'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 
 const UserProfile = () => {
@@ -77,15 +78,14 @@ const UserProfile = () => {
                 avatar: response.data.avatar,
             })
 
-            setSuccess("Profile updated successfully!");
+            toast.success("Profile updated successfully!")
             setTimeout(() => {
                 setSuccess("");
             }, 3000);
 
         }
         catch (error) {
-            console.log(error);
-            setError("Failed to update profile.");
+            toast.error("Failed to update profile")
         } finally {
             setLoading(false);
         }

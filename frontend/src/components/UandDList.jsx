@@ -1,6 +1,7 @@
 import api from '../api'
 import { useState } from 'react'
 import { CiMenuKebab } from "react-icons/ci";
+import { toast } from 'react-toastify';
 
 const UandDList = ({ list, refreshList }) => {
 
@@ -23,10 +24,11 @@ const UandDList = ({ list, refreshList }) => {
             setTitle(response.data.title);
             setIsEditing(false)
             refreshList();
+            toast.success("Updated Successfully")
         }
 
         catch (error) {
-            console.log(error)
+            toast.error("You are not allowed to Update")
         }
 
     }
@@ -38,10 +40,11 @@ const UandDList = ({ list, refreshList }) => {
             await api.delete(`/api/lists/${list.id}/`)
 
             refreshList();
+            toast.success("Delete Successfully")
         }
 
         catch (error) {
-            console.log(error)
+           toast.error("You are not allowed to delete")
         }
 
     }

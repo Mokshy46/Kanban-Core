@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import api from '../api';
+import { toast } from 'react-toastify';
 
 const AcceptInvite = () => {
     const { token } = useParams();
@@ -42,7 +43,7 @@ const AcceptInvite = () => {
         try {
             await api.post(`/api/boards/accept_invite/${token}/`);
 
-            alert("Joined board!");
+           toast.success("Joined Successfully")
             navigate("/boards");
 
         } catch (error) {

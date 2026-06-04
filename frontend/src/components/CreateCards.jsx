@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import api from "../api";
+import { toast } from 'react-toastify';
 
 const CreateCards = ({ listId, setLists }) => {
   const [formData, setFormData] = useState({
@@ -51,12 +52,13 @@ const CreateCards = ({ listId, setLists }) => {
         })
       );
       setFormData({ title: "", description: "" });
+      toast.success("Card Created Successfully")
       setError("");
       setIsAdding(false);
 
     } catch (error) {
       console.log(error);
-      setError("Card title is required")
+      toast.error("Card title is Required")
     }
   };
 
