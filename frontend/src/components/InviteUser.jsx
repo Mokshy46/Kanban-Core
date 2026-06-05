@@ -11,9 +11,6 @@ const InviteUser = ({ boardId }) => {
   const [loading, setLoading] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
 
-  if (!response.data.email_sent) {
-    setInviteLink(response.data.invite_link);
-  }
 
   const handleChange = (e) => {
 
