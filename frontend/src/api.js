@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+   baseURL: import.meta.env.VITE_API_URL,
 });
 
 // Attach access token
@@ -21,7 +21,6 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If access token expired
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -36,12 +35,11 @@ api.interceptors.response.use(
         // Save new access token
         localStorage.setItem("access", res.data.access);
 
-        // Retry original request
         originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
         return api(originalRequest);
 
       } catch (err) {
-        // Refresh failed --> logout
+        
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
 

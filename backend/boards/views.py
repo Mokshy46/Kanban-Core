@@ -442,7 +442,7 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
             invited_by = self.request.user,
         )
         
-        link = f"http://localhost:5173/invite/{invite.token}"
+        link = f"{settings.FRONTEND_URL}/invite/{invite.token}"
 
 
         message = f"""
