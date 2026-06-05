@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -39,10 +39,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/api/user/register/",
-                formData
-            );
+            const response = await await api.post("/api/user/register/", formData);
 
             
 

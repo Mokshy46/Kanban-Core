@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { Link } from "react-router-dom";
 import { useNavigate,useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -36,10 +36,8 @@ const Login = () => {
         setError("");
 
         try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/api/user/login/",
-                formData
-            );
+            const response =await api.post("/api/user/login/", formData);
+        
 
             
             localStorage.setItem("access", response.data.access);
