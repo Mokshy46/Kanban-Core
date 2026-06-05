@@ -543,9 +543,13 @@ class InviteUserAcceptAPIView(APIView):
 
             return Response({"message": "Successfully joined board"}, status=status.HTTP_200_OK)
 
-        except InviteUser.DoesNotExist:
-            return Response({"error": "Invalid token"}, status=status.HTTP_404_NOT_FOUND)
-        
+        except Exception as e:
+            print("ACCEPT INVITE ERROR:", repr(e))
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
         
         
 @api_view(['PATCH'])
