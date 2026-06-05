@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../api";
 import { Link } from "react-router-dom";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -36,17 +36,17 @@ const Login = () => {
         setError("");
 
         try {
-            const response =await api.post("/api/user/login/", formData);
-        
+            const response = await api.post("/api/user/login/", formData);
 
-            
+
+
             localStorage.setItem("access", response.data.access);
             localStorage.setItem("refresh", response.data.refresh);
 
-            
 
 
-        navigate(redirect || "/boards");
+
+            navigate(redirect || "/boards");
 
         } catch (error) {
             toast.error("Error during Login")
@@ -61,7 +61,7 @@ const Login = () => {
                     toast.error("Login Failed")
                 }
             } else {
-               toast.error("Login Error")
+                toast.error("Login Error")
             }
         }
 
@@ -119,7 +119,9 @@ const Login = () => {
 
                 <p className="text-sm text-center">
                     Don't have an account?{" "}
-                    <Link to="/register" className="text-blue-500">
+                    <Link
+                        to={`/register${redirect ? `?redirect=${redirect}` : ""}`}
+                        className="text-blue-500">
                         Register
                     </Link>
                 </p>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,12 @@ const Register = () => {
         password: "",
         password_2: "",
     });
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get("redirect");
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -41,13 +48,11 @@ const Register = () => {
         try {
             const response = await await api.post("/api/user/register/", formData);
 
-            
+
 
             toast.success("Account created successfully")
 
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 1500);
+            navigate(redirect ? `/?redirect=${redirect}` : "/");
 
         } catch (error) {
             console.log("Error during registration:", error.response?.data);
@@ -77,7 +82,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit} className="px-5">
 
-                    {/* Email */}
+
                     <div className="p-3">
                         <label>Email :</label>
                         <input
@@ -163,7 +168,9 @@ const Register = () => {
 
                 <p className="text-sm text-center">
                     Already have an account?{" "}
-                    <Link to="/" className="text-blue-500">
+                    <Link
+                        to={`/${redirect ? `?redirect=${redirect}` : ""}`}
+                        className="text-blue-500">
                         Login
                     </Link>
                 </p>
