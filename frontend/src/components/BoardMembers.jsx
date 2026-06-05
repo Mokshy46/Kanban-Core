@@ -34,7 +34,7 @@ const BoardMembers = ({ board }) => {
 
                         {boardMember.avatar ? (
                             <img
-                                src={boardMember.avatar}
+                                src={`https://kanban-core.onrender.com${user.avatar}`} 
                                 alt={boardMember.username}
                                 className="w-10 h-10 rounded-full object-cover"
                             />
