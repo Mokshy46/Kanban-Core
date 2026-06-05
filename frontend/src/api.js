@@ -4,7 +4,7 @@ const api = axios.create({
    baseURL: import.meta.env.VITE_API_URL,
 });
 
-// Attach access token
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access");
 
@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token expiration
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -27,8 +27,7 @@ api.interceptors.response.use(
       try {
         const refresh = localStorage.getItem("refresh");
 
-        const res = await axios.post(
-          "http://127.0.0.1:8000/api/user/token/refresh/",
+        const res = await api.post("/api/user/token/refresh/",
           { refresh }
         );
 
