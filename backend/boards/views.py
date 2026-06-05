@@ -23,7 +23,6 @@ import resend
 
 resend.api_key = settings.RESEND_API_KEY
 
-
 User = get_user_model()
 
 def create_activity(user, board, action):
