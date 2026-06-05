@@ -200,6 +200,7 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = os.getenv("EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASS")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 CHANNEL_LAYERS = {
     "default": {

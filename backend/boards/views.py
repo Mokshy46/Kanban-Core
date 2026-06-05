@@ -19,6 +19,10 @@ from asgiref.sync import async_to_sync
 from .throttle import InviteThrottle
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+import resend
+
+resend.api_key = settings.RESEND_API_KEY
+
 
 User = get_user_model()
 
@@ -462,17 +466,17 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
         """
         
         try:
-            send_mail(
-                "Board Invitation",
-                message,
-                settings.EMAIL_HOST_USER,
-                [invite.email],
-                fail_silently=False,
-            )
-            print("EMAIL SENT")
+            response = resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": [invite.email],
+                "subject": "Board Invitation",
+                "text": message,
+            })
+
+            print("RESEND SUCCESS:", response)
+
         except Exception as e:
-            print("EMAIL ERROR:", type(e).__name__)
-            print("EMAIL ERROR:", str(e))
+            print("RESEND ERROR:", repr(e))
 
         
   
