@@ -16,14 +16,8 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from decouple import config
 import dj_database_url
-import cloudinary
-
 
 load_dotenv()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.getenv("CLOUD_NAME"),
@@ -31,7 +25,16 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": os.getenv("API_SECRET"),
 }
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+}
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
