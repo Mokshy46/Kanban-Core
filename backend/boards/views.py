@@ -425,45 +425,45 @@ class ActivityListAPIView(generics.ListAPIView):
     def get_queryset(self):
         board_id = self.kwargs.get("board_id")
         return Activity.objects.filter(board_id = board_id).order_by("-created_at")
-
-
+    
 class InviteMemberCreateAPIView(generics.CreateAPIView):
     
     serializer_class = InviteUserSerializer
     permission_classes = [permissions.IsAuthenticated, BoardRolePermission]
     throttle_classes = [InviteThrottle]
-    def perform_create(self,serializer):
-        email = serializer.validated_data.get("email")
-        role = serializer.validated_data.get("role")
-        board_id =self.kwargs.get("board_id")
-        
-        board = get_object_or_404(Boards, id=board_id)   
-            
-        invite = serializer.save(
-            
-            board=board,
-            invited_by = self.request.user,
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        board = get_object_or_404(
+            Boards,
+            id=self.kwargs["board_id"]
         )
-        
+
+        invite = serializer.save(
+            board=board,
+            invited_by=request.user,
+        )
         link = f"{settings.FRONTEND_URL}/invite/{invite.token}"
 
 
         message = f"""
- 
-            You've been invited to join a board on Kanban.
+    
+                You've been invited to join a board on Kanban.
 
-            Invited by: {board.owner.first_name} {board.owner.last_name}
-            Board: {board.title}
-            Role: {invite.role}
+                Invited by: {board.owner.first_name} {board.owner.last_name}
+                Board: {board.title}
+                Role: {invite.role}
 
-            Click the link below to accept your invitation:
+                Click the link below to accept your invitation:
 
-            {link}
+                {link}
 
-            If you weren't expecting this invitation, you can safely ignore this email.
+                If you weren't expecting this invitation, you can safely ignore this email.
 
-        """
-        
+            """
+
         try:
             resend.Emails.send({
                 "from": "onboarding@resend.dev",
@@ -471,18 +471,19 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
                 "subject": "Board Invitation",
                 "text": message,
             })
-
             email_sent = True
 
         except Exception as e:
             print("RESEND ERROR:", e)
             email_sent = False
 
-        return Response({
-            "email_sent": email_sent,
-            "invite_link": link,
-        })
-
+        return Response(
+            {
+                "email_sent": email_sent,
+                "invite_link": link,
+            },
+            status=status.HTTP_201_CREATED
+        )
         
   
 class ValidateInviteAPIView(APIView):
