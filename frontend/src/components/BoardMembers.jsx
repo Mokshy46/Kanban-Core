@@ -10,6 +10,9 @@ const BoardMembers = ({ board }) => {
         try {
             const response = await api.get(`/api/boards/${board.id}/members/`);
             setBoardMembers(response.data)
+            response.data.forEach(member => {
+                console.log(member.avatar);
+            });
         }
         catch (error) {
             console.log(error);
@@ -20,7 +23,6 @@ const BoardMembers = ({ board }) => {
         if (!board) return;
         fetchBoardMembers();
     }, [board?.id])
-
     return (
         <div className="space-y-3">
 
@@ -61,7 +63,7 @@ const BoardMembers = ({ board }) => {
                         refreshBoardMembersList={fetchBoardMembers}
                         userId={boardMember.user}
                         boardMember={boardMember.role} />
-               
+
 
                 </div>
             ))}
