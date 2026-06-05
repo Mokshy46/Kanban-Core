@@ -40,25 +40,23 @@ const AcceptInvite = () => {
 
 
     const acceptInvite = async () => {
-        try {
-            await api.post(`/api/boards/accept_invite/${token}/`);
+        console.log("BUTTON CLICKED");
 
-           toast.success("Joined Successfully")
+        try {
+            console.log("SENDING REQUEST");
+
+            const response = await api.post(
+                `/api/boards/accept_invite/${token}/`
+            );
+
+            console.log(response.data);
+
+            toast.success("Joined Successfully");
             navigate("/boards");
 
         } catch (error) {
-            const err = error.response?.data;
-
-            console.log(err);
-
-            if (err?.error === "This invite is not for you") {
-                localStorage.removeItem("access");
-                localStorage.removeItem("refresh");
-
-                navigate(`/?redirect=/invite/${token}`);
-            }
+            console.log("ERROR:", error.response?.data);
         }
-
     };
     if (!isAuthenticated) return <p>Checking authentication...</p>;
 
