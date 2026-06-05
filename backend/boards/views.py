@@ -465,17 +465,23 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
         """
         
         try:
-            response = resend.Emails.send({
+            resend.Emails.send({
                 "from": "onboarding@resend.dev",
                 "to": [invite.email],
                 "subject": "Board Invitation",
                 "text": message,
             })
 
-            print("RESEND SUCCESS:", response)
+            email_sent = True
 
         except Exception as e:
-            print("RESEND ERROR:", repr(e))
+            print("RESEND ERROR:", e)
+            email_sent = False
+
+        return Response({
+            "email_sent": email_sent,
+            "invite_link": link,
+        })
 
         
   

@@ -9,7 +9,11 @@ const InviteUser = ({ boardId }) => {
     role: "",
   });
   const [loading, setLoading] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
 
+  if (!response.data.email_sent) {
+    setInviteLink(response.data.invite_link);
+  }
 
   const handleChange = (e) => {
 
@@ -22,21 +26,35 @@ const InviteUser = ({ boardId }) => {
     setLoading(true);
 
     try {
-      await api.post(`/api/boards/${boardId}/invite/`, formData);
+      const response = await api.post(
+        `/api/boards/${boardId}/invite/`,
+        formData
+      );
 
       setFormData({
         email: "",
         role: "",
       });
 
-      toast.success("Email Invite Sent Successfully");
+      if (response.data.email_sent) {
+        toast.success("Invitation email sent!");
+      } else {
+        await navigator.clipboard.writeText(
+          response.data.invite_link
+        );
+
+        toast.info(
+          "Email unavailable. Invite link copied to clipboard."
+        );
+      }
+
     } catch (error) {
       console.log(error.response?.data);
 
       if (error.response?.data?.detail) {
         toast.error(error.response.data.detail);
       } else {
-        toast.error("Failed to send invitation");
+        toast.error("Failed to create invitation");
       }
     } finally {
       setLoading(false);
@@ -49,6 +67,31 @@ const InviteUser = ({ boardId }) => {
       <h3 className="text-2xl font-bold">
         Invite Member
       </h3>
+
+      {inviteLink && (
+        <div className="bg-[#FAF9EE] border-2 border-[#A2AF9B] rounded-2xl p-4 space-y-3">
+          <p className="font-semibold text-[#4A5A46]">
+            Invite Link Generated
+          </p>
+
+          <input
+            value={inviteLink}
+            readOnly
+            onClick={(e) => e.target.select()}
+            className="w-full rounded-xl px-3 py-2 bg-white border border-[#A2AF9B] text-sm"
+          />
+
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(inviteLink);
+              toast.success("Invite link copied!");
+            }}
+            className="btn-primary w-full"
+          >
+            Copy Invite Link
+          </button>
+        </div>
+      )}
 
       <input
         type="email"
