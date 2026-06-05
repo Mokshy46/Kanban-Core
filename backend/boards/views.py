@@ -461,12 +461,19 @@ class InviteMemberCreateAPIView(generics.CreateAPIView):
 
         """
         
-        send_mail(
-            "Board Invitation",
-            message,
-            settings.EMAIL_HOST_USER,
-            [invite.email],
-)
+        try:
+            send_mail(
+                "Board Invitation",
+                message,
+                settings.EMAIL_HOST_USER,
+                [invite.email],
+                fail_silently=False,
+            )
+            print("EMAIL SENT")
+        except Exception as e:
+            print("EMAIL ERROR:", type(e).__name__)
+            print("EMAIL ERROR:", str(e))
+
         
   
 class ValidateInviteAPIView(APIView):
