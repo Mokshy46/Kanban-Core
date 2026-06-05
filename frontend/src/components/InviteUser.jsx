@@ -36,6 +36,8 @@ const InviteUser = ({ boardId }) => {
       if (response.data.email_sent) {
         toast.success("Invitation email sent!");
       } else {
+        setInviteLink(response.data.invite_link);
+
         await navigator.clipboard.writeText(
           response.data.invite_link
         );
