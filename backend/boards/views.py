@@ -514,7 +514,6 @@ class InviteUserAcceptAPIView(APIView):
     def post(self, request, token):
         try:
             invite = InviteUser.objects.get(token=token)
-            user = User.objects.get(email = invite.email)
             if invite.accepted:
                 return Response({"error": "Invite already used"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -537,9 +536,9 @@ class InviteUserAcceptAPIView(APIView):
             invite.save()
                     
             create_activity(
-                user = invite.invited_by,
+                user=invite.invited_by,
                 board=invite.board,
-                action=f" added {user.first_name} to the board "
+                action=f" added {request.user.first_name} to the board "
             )
 
             return Response({"message": "Successfully joined board"}, status=status.HTTP_200_OK)
