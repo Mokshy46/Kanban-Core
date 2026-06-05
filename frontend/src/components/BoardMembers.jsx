@@ -10,9 +10,7 @@ const BoardMembers = ({ board }) => {
         try {
             const response = await api.get(`/api/boards/${board.id}/members/`);
             setBoardMembers(response.data)
-            response.data.forEach(member => {
-                console.log(member.avatar);
-            });
+           
         }
         catch (error) {
             console.log(error);
