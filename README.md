@@ -6,7 +6,6 @@
 
 
 
-
 **[Live Demo](https://kanban-core-gray.vercel.app)** 
 
 </div>
