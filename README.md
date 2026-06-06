@@ -4,7 +4,7 @@
 
 ### A Production-Grade Collaborative Project Management Platform
 
-![Realtime Demo](./Demo GIF.mp4)
+![Realtime Demo](./Demo-gif.mp4)
 
 **[Live Demo](https://kanban-core-gray.vercel.app)** 
 
