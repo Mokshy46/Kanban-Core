@@ -4,7 +4,9 @@
 
 ### A Production-Grade Collaborative Project Management Platform
 
-images
+image
+
+
 
 **[Live Demo](https://kanban-core-gray.vercel.app)** 
 
@@ -216,16 +218,10 @@ Base URL: `https://api.kanban-core.onrender.com/api/`
 ---
 
 ## Screenshots
-
-> _Replace the placeholders below with your actual screenshots._
-
-| Board View | Task Detail | Activity Log |
-|:---:|:---:|:---:|
-| ![Board View](./screenshots/board.png) | ![Task Detail](./screenshots/task-detail.png) | ![Activity](./screenshots/activity.png) |
-
-| Invite Members | Member Roles | Mobile View |
-|:---:|:---:|:---:|
-| ![Invite](./screenshots/invite.png) | ![Roles](./screenshots/roles.png) | ![Mobile](./screenshots/mobile.png) |
+<img width="960" height="504" alt="Screenshot 2026-06-06 133741" src="https://github.com/user-attachments/assets/2fbc18e1-333d-4c80-8f5e-bf06930f93d8" />
+<img width="960" height="504" alt="Screenshot 2026-06-06 133720" src="https://github.com/user-attachments/assets/a5c0b09d-75e7-47cc-b421-aea2cf9a6c9b" />
+<img width="960" height="504" alt="Screenshot 2026-06-06 134035" src="https://github.com/user-attachments/assets/dfeb3775-7429-4866-98b1-e847d463c11b" />
+<img width="960" height="504" alt="Screenshot 2026-06-06 134218" src="https://github.com/user-attachments/assets/324ad1c9-fe1c-483f-80b3-f80c8e17b7a2" />
 
 
 ## Getting Started
