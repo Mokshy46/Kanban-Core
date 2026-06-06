@@ -4,7 +4,6 @@
 
 ### A Production-Grade Collaborative Project Management Platform
 
-image
 
 
 
@@ -218,10 +217,10 @@ Base URL: `https://api.kanban-core.onrender.com/api/`
 ---
 
 ## Screenshots
-<img width="960" height="504" alt="Screenshot 2026-06-06 133741" src="https://github.com/user-attachments/assets/2fbc18e1-333d-4c80-8f5e-bf06930f93d8" />
-<img width="960" height="504" alt="Screenshot 2026-06-06 133720" src="https://github.com/user-attachments/assets/a5c0b09d-75e7-47cc-b421-aea2cf9a6c9b" />
-<img width="960" height="504" alt="Screenshot 2026-06-06 134035" src="https://github.com/user-attachments/assets/dfeb3775-7429-4866-98b1-e847d463c11b" />
-<img width="960" height="504" alt="Screenshot 2026-06-06 134218" src="https://github.com/user-attachments/assets/324ad1c9-fe1c-483f-80b3-f80c8e17b7a2" />
+<img width="1920" height="934" alt="image" src="https://github.com/user-attachments/assets/5772f413-46fb-495e-a4dd-2fbd0cc46296" />
+<img width="1920" height="949" alt="image" src="https://github.com/user-attachments/assets/cc6bc8c2-0775-4090-b907-f29e89e2c011" />
+<img width="1920" height="938" alt="image" src="https://github.com/user-attachments/assets/73096fbd-8605-4c23-a4f3-8fb101e12e2b" />
+<img width="1920" height="960" alt="image" src="https://github.com/user-attachments/assets/baadc067-7d2a-488e-96bb-2cb4c5938f8b" />
 
 
 ## Getting Started
