@@ -4,7 +4,7 @@
 
 ### A Production-Grade Collaborative Project Management Platform
 
-https://github.com/Mokshy46/Kanban-Core/blob/906a7d95679b73185d4fa0239b7f3a493f04b92e/Demo%20GIF.mp4
+![Realtime Demo](./Demo GIF.mp4)
 
 **[Live Demo](https://kanban-core-gray.vercel.app)** 
 
