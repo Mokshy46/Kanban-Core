@@ -2,30 +2,30 @@
 
 # Kanban Core
 
-### A Production-Grade Collaborative Project Management Platform
-
-![Realtime Demo](./realtime-demo.gif)
+### Full-Stack Collaborative Project Management Platform
 
 **[Live Demo](https://kanban-core-gray.vercel.app)** 
 
+![Realtime Demo](./realtime-demo.gif)
 </div>
 
 ---
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Key Highlights](#-key-highlights)
-- [Features](#-features)
-- [Architecture Overview](#-architecture-overview)
-- [System Design](#-system-design)
-- [Database & Backend](#-database--backend)
-- [Real-Time Collaboration](#-real-time-collaboration)
-- [Security](#-security)
-- [API Design](#-api-design)
-- [Screenshots](#-screenshots)
-- [Getting Started](#-getting-started)
-- [Future Improvements](#-future-improvements)
+- [Overview](#overview)
+- [Key Highlights](#key-highlights)
+- [Features](#features)
+- [Architecture Overview](#architecture-overview)
+- [Tech Stack](#tech-stack)
+- [System Design](#system-design)
+- [Database & Backend](#database--backend)
+- [Real-Time Collaboration](#real-time-collaboration)
+- [Security](#security)
+- [API Design](#api-design)
+- [Screenshots](#screenshots)
+- [Getting Started](#getting-started)
+- [Future Improvements](#future-improvements)
 
 ---
 
@@ -128,6 +128,24 @@ Every significant action is recorded and surfaced in a human-readable activity f
 └────────────────────────┘  └─────────────────────────────┘
 ```
 
+## Tech Stack
+
+### Backend
+- Django
+- Django REST Framework
+- Django Channels
+- PostgreSQL
+- JWT Authentication
+
+### Frontend
+- React
+- Tailwind CSS
+- Axios
+
+### Infrastructure
+- Render
+- Vercel
+- Cloudinary
 
 ## System Design
 
@@ -234,7 +252,7 @@ Base URL: `https://api.kanban-core.onrender.com/api/`
 
 ```bash
 # Clone the repository
-git clone [https://github.com/yourusername/kanban-core.git](https://github.com/Mokshy46/Kanban-Core.git)
+git clone https://github.com/Mokshy46/Kanban-Core.git
 cd kanban/backend
 
 # Create and activate a virtual environment
